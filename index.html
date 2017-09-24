@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="jobListings">
+  <head>
+    <title>Viewer for Scrapy Scrapes</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="bootstrap-3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+  </head>
+
+  <body ng-controller="JobsController as jobs">
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="col-xs-6 col-xs-offset-3">
+            <div class="mytitle">
+                <img src="img/Scrapy-Logo-Horizontal.png" width="100%" alt="Scrapy">
+                <h1>View Scrapy Scrapes</h1>
+                Use this as a way to view and filter through <code>-o .json</code> scrape results.
+            </div>
+
+          <label for="include">Include:</label>
+          <div class="input-group">
+            <span class="input-group-addon" id="include-addon">
+              <i class="fa fa-check" aria-hidden="true"></i>
+            </span>
+            <input
+              id="include"
+              type="text"
+              class="form-control"
+              ng-model="jobs.include"
+              aria-describedby="include-addon" />
+          </div>
+          <br />
+          <label for="exclude">Exclude:</label>
+          <div class="input-group">
+            <span class="input-group-addon" id="exclude-addon">
+              <i class="fa fa-ban" aria-hidden="true"></i>
+            </span>
+            <input
+              id="exclude"
+              type="text"
+              class="form-control"
+              ng-model="jobs.exclude"
+              aria-describedby="exclude-addon" />
+          </div>
+
+          <jobs-source ng-repeat="source in jobs.sources"></jobs-source>
+
+        </div>
+      </div> <!-- .row -->
+    </div><!-- .container-fluid -->
+    <script
+      src="src/jquery-3.1.1.min.js"></script>
+    <script
+      src="bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+    <script src="lib/angular.min.js"></script>
+    <script src="src/app.js"></script>
+
+  </body>
+
+  <footer>
+  </footer>
+</html>
