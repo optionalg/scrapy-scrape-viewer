@@ -14,15 +14,15 @@
 		},
 		{
 			"name": "StackOverflow - Alabama",
-			"file": "stackoverflow_Alabama.json"
+			"file": "stackoverflow_Alabama_Demo.json"
 		},
 		{
 			"name": "StackOverflow - Florida",
-			"file": "stackoverflow_Florida.json"
+			"file": "stackoverflow_Florida_Demo.json"
 		},
 		{
 			"name": "StackOverflow - Georgia",
-			"file": "stackoverflow_Georgia.json"
+			"file": "stackoverflow_Georgia_Demo.json"
 		}
 	]
 }
