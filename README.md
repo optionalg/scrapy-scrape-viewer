@@ -6,7 +6,7 @@
 
 * I left almost all of the GUI alone. I just applied it to work with the .json generated with my own Scrapy bots.
 
-#### Refer to my older  [GIT-REPO-LINKs](https://github.com/mezcel/googlemaps-api-helloworld) to generate the .json this AngularJS App will use.
+#### Refer to my older [GIT-REPO-Branch](https://github.com/mezcel/googlemaps-api-helloworld/tree/expanded-idea-8-stackoverflow) to generate the .json this AngularJS App will use.
 
 > * <i> I used a more efficient scrape technique than the one used in my the Google API Repo </i>
 
