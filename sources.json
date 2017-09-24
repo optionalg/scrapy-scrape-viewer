@@ -1,16 +1,28 @@
 {
 	"sources": [
 		{
-			"name": "Express Pros - Alabama",
-			"file": "expresspros_Alabama.json"
-		},
-		{
-			"name": "Express Pros - Alabama DEMO",
+			"name": "ExpressPros - Alabama",
 			"file": "expresspros_Alabama_Demo.json"
 		},
 		{
-			"name": "Florida - Stack Overflow",
+			"name": "ExpressPros - Florida",
+			"file": "expresspros_Florida_Demo.json"
+		},
+		{
+			"name": "ExpressPros - Georgia",
+			"file": "expresspros_Georgia_Demo.json"
+		},
+		{
+			"name": "StackOverflow - Alabama",
+			"file": "stackoverflow_Alabama.json"
+		},
+		{
+			"name": "StackOverflow - Florida",
 			"file": "stackoverflow_Florida.json"
+		},
+		{
+			"name": "StackOverflow - Georgia",
+			"file": "stackoverflow_Georgia.json"
 		}
 	]
 }
