@@ -21,6 +21,7 @@
     rm '/home/mezcel/github/scrapy-scrape-viewer/stackoverflow_Alabama_Demo.json'
     rm '/home/mezcel/github/scrapy-scrape-viewer/stackoverflow_Florida_Demo.json'
     rm '/home/mezcel/github/scrapy-scrape-viewer/stackoverflow_Georgia_Demo.json'
+    rm '/home/mezcel/github/scrapy-scrape-viewer/targetedjobfairs_Fairs_Demo.json'
 
     cd '/home/mezcel/github/scrapy-scrape-viewer/scrapyvirtualenv'
     source bin/activate
@@ -38,6 +39,12 @@
     scrapy crawl stackoverflow -a domain='https://stackoverflow.com/jobs?sort=p&l=Alabama' -o ../../stackoverflow_Alabama_Demo.json -t json
     scrapy crawl stackoverflow -a domain='https://stackoverflow.com/jobs?sort=p&l=Florida' -o ../../stackoverflow_Florida_Demo.json -t json
     scrapy crawl stackoverflow -a domain='https://stackoverflow.com/jobs?sort=p&l=Georgia' -o ../../stackoverflow_Georgia_Demo.json -t json
+
+    cd ..
+    ls
+
+    cd targetedjobfairs
+    scrapy crawl targetedjobfairs -o ../../targetedjobfairs_Fairs_Demo.json -t json
 
 ```
 

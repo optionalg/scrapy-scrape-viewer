@@ -36,8 +36,8 @@ class TargetedJobFairsSpider(scrapy.Spider):
         for sel in response.css('div.pricing-table-wrap'):
             yield {
                 'event': sel.css('ul > li > div::text').extract_first(),
-                'date': sel.css('ul > li::text').extract_first(),
-                'hotel': sel.css('ul > li::text').extract()[2].strip(),
-                'address': sel.css('ul > li::text').extract()[3].strip(),
-                'api': sel.css('ul > li::text').extract(), #sel.css('ul > li[5] a::attr(href)').extract_first(),
+                #'date': sel.css('ul > li::text').extract_first(),
+                #'hotel': sel.css('ul > li::text').extract()[2].strip(),
+                #'address': sel.css('ul > li::text').extract()[3].strip(),
+                #'api': sel.css('ul > li::text').extract(), #sel.css('ul > li[5] a::attr(href)').extract_first(),
             }
