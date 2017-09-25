@@ -2,27 +2,27 @@
 	"sources": [
 		{
 			"name": "ExpressPros - Alabama",
-			"file": "expresspros_Alabama_Demo.json"
+			"file": "expresspros_Alabama_Videmo.json"
 		},
 		{
 			"name": "ExpressPros - Florida",
-			"file": "expresspros_Florida_Demo.json"
+			"file": "expresspros_Florida_Videmo.json"
 		},
 		{
 			"name": "ExpressPros - Georgia",
-			"file": "expresspros_Georgia_Demo.json"
+			"file": "expresspros_Georgia_Videmo.json"
 		},
 		{
 			"name": "StackOverflow - Alabama",
-			"file": "stackoverflow_Alabama_Demo.json"
+			"file": "stackoverflow_Alabama_Videmo.json"
 		},
 		{
 			"name": "StackOverflow - Florida",
-			"file": "stackoverflow_Florida_Demo.json"
+			"file": "stackoverflow_Florida_Videmo.json"
 		},
 		{
 			"name": "StackOverflow - Georgia",
-			"file": "stackoverflow_Georgia_Demo.json"
+			"file": "stackoverflow_Georgia_Videmo.json"
 		},
 		{
 			"name": "Targeted Job Fairs",
