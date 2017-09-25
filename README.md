@@ -13,6 +13,7 @@
 
 ### Linux Terminal cheat:
 
+### Update my scrape DB
 ```
     rm '/home/mezcel/github/scrapy-scrape-viewer/expresspros_Alabama_Demo.json'
     rm '/home/mezcel/github/scrapy-scrape-viewer/expresspros_Florida_Demo.json'
@@ -38,4 +39,12 @@
     scrapy crawl stackoverflow -a domain='https://stackoverflow.com/jobs?sort=p&l=Florida' -o ../../stackoverflow_Florida_Demo.json -t json
     scrapy crawl stackoverflow -a domain='https://stackoverflow.com/jobs?sort=p&l=Georgia' -o ../../stackoverflow_Georgia_Demo.json -t json
 
+```
+
+### Add a new crawler to existing Virtual Environment
+```
+    cd '/home/mezcel/github/scrapy-scrape-viewer/scrapyvirtualenv'
+    source bin/activate
+
+    scrapy startproject <project_name> [project_dir]
 ```
