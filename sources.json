@@ -23,6 +23,10 @@
 		{
 			"name": "StackOverflow - Georgia",
 			"file": "stackoverflow_Georgia_Demo.json"
+		},
+		{
+			"name": "Targeted Job Fairs",
+			"file": "targetedjobfairs_Targeted_Fairs.json"
 		}
 	]
 }
