@@ -33,11 +33,20 @@ class TargetedJobFairsSpider(scrapy.Spider):
 
     # scrape the page the link led me to
     def parse_fair(self, response):
-        for sel in response.css('div.pricing-table-wrap'):
+        # //*[@id="main"]/div/div/main/div/div/div[2]
+        #for sel in response.css('div.pricing-table-wrap'):
+        for sel in response.xpath('//*[@id="main"]/div/div/main/div/div/div[2]'):
+            # strip and concat my address array
+            tempAddrArr = [i.strip() for i in sel.xpath('div[1]/div/ul/li[5]/text()').extract()]
+            tempAddrArr = ", ".join(tempAddrArr)
             yield {
-                'event': sel.css('ul > li > div::text').extract_first(),
-                #'date': sel.css('ul > li::text').extract_first(),
-                #'hotel': sel.css('ul > li::text').extract()[2].strip(),
-                #'address': sel.css('ul > li::text').extract()[3].strip(),
-                #'api': sel.css('ul > li::text').extract(), #sel.css('ul > li[5] a::attr(href)').extract_first(),
+                'event': sel.xpath('div[1]/div/ul/li[1]/div/text()').extract_first(), #//*[@id="main"]/div/div/main/div/div/div[2]/div[1]/div/ul/li[1]/div
+                'date': sel.xpath('div[1]/div/ul/li[2]/text()').extract_first(), #//*[@id="main"]/div/div/main/div/div/div[2]/div[1]/div/ul/li[2]
+                'hotel': sel.xpath('div[1]/div/ul/li[4]/text()').extract_first(), #//*[@id="main"]/div/div/main/div/div/div[2]/div[1]/div/ul/li[4]
+                'address': tempAddrArr,
+                #[i.strip() for i in sel.xpath('div[1]/div/ul/li[5]/text()').extract()], # //*[@id="main"]/div/div/main/div/div/div[2]/div[1]/div/ul/li[5]
+                # [i.strip() for i in id.select('text()').extract()]
+                # 'address': sel.xpath('div[1]/div/ul/li[5]/text()').extract()[0].strip()
+                'participants': sel.xpath('div[2]/div/ul/li/text()').extract(), #//*[@id="main"]/div/div/main/div/div/div[2]/div[2]/div/ul/li[2]
+                #//*[@id="main"]/div/div/main/div/div/div[2]/div[2]/div/ul/li[13]
             }
