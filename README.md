@@ -1,8 +1,9 @@
 # scrapy-scrape-viewer
 
-### Review My Scrapes
+### Viewer For My Scrapes
+#### This branch will add some fairs in the area
 
-> Initially Semi-Cloned From: [kimberlythegeek/stackoverflow-denver_spider.py](https://github.com/kimberlythegeek/scrapy-project/blob/master/tutorial/spiders/stackoverflow-denver_spider.py)
+> The html was initially Semi-Cloned From: [kimberlythegeek/stackoverflow-denver_spider.py](https://github.com/kimberlythegeek/scrapy-project/blob/master/tutorial/spiders/stackoverflow-denver_spider.py)
 
 * I left almost all of the GUI alone. I just applied it to work with the .json generated with my own Scrapy bots.
 
