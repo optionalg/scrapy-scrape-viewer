@@ -27,7 +27,7 @@ class ExpressprosSpider(scrapy.Spider):
             item['officeAddress'] = tempAddrArr
             item['officePhone'] = sel.xpath('div[1]/div[2]/a/@href').extract_first()
             item['officeEmail'] = sel.xpath('div[2]/div[1]/a/@href').extract_first()
-            item['officeWeb'] = sel.xpath('div[2]/div[2]/a/@href').extract_first()
+            item['officeWeb'] = sel.xpath('div[2]/div[3]/a/@href').extract_first()
             yield item
 
         # follow links to city pages
