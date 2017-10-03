@@ -26,3 +26,9 @@ class JobsUpsSpider(scrapy.Spider):
                 'company': result.xpath('a/span[1]/text()').extract_first(),
                 'date': datetime.datetime.now().strftime ("%Y%m%d"),
             }
+            # follow pagination links
+            next_page = response.xpath('//*[@id="pagination-bottom"]/div[2]/a[2]/@href').extract_first()
+            if next_page is not None:
+                next_page = "https://www.jobs-ups.com" + next_page
+                next_page = response.urljoin(next_page)
+                yield scrapy.Request(next_page, callback=self.parse)

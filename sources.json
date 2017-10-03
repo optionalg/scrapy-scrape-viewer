@@ -31,6 +31,14 @@
 		{
 			"name": "UPS Florida",
 			"file": "jobsups_Florida_Demo.json"
+		},
+		{
+			"name": "UPS Alabama",
+			"file": "jobsups_Alabama_Demo.json"
+		},
+		{
+			"name": "UPS Georgia",
+			"file": "jobsups_Georgia_Demo.json"
 		}
 	]
 }
