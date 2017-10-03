@@ -27,6 +27,10 @@
 		{
 			"name": "Targeted Job Fairs",
 			"file": "targetedjobfairs_Fairs_Demo.json"
+		},
+		{
+			"name": "UPS Florida",
+			"file": "jobsups_Florida_Demo.json"
 		}
 	]
 }
