@@ -5,6 +5,8 @@
 
 > The html was initially Semi-Cloned From: [kimberlythegeek/stackoverflow-denver_spider.py](https://github.com/kimberlythegeek/scrapy-project/blob/master/tutorial/spiders/stackoverflow-denver_spider.py)
 
+* this version is focused on moding the jobsups spider for the document-writer REPO json input
+
 * I left almost all of the GUI alone. I just applied it to work with the .json generated with my own Scrapy bots.
 
 #### Refer to my older [GIT-REPO-Branch](https://github.com/mezcel/googlemaps-api-helloworld/tree/expanded-idea-8-stackoverflow) to generate the .json this AngularJS App will use.
