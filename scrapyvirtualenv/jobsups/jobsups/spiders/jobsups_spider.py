@@ -32,15 +32,12 @@ class JobsUpsSpider(scrapy.Spider):
             upsurl = result.xpath('a/@href').extract_first()
             upsurl = "".join(["https://www.jobs-ups.com", upsurl])
             yield response.follow(upsurl, self.parse_receiverTemplateJSON)
-            #yield response.follow(upsurl, callback=self.parse_test1)
-            #yield response.follow(upsurl, self.parse_test1)
 
 
     def parse_test1(self, response):
         for sel1 in response.xpath('//*[@id="description"]'):
             # reciever input data
             tempUrl = sel1.xpath('//*[@id="mapsection"]/span/a/@href').extract_first()
-            #yield response.follow(tempUrl, callback=self.parse_test2)
             yield response.follow(tempUrl, self.parse_test2)
 
 
@@ -51,6 +48,12 @@ class JobsUpsSpider(scrapy.Spider):
         for sel2 in response.css('#content'):
             # https://groups.google.com/forum/#!topic/scrapy-users/lX5lHQ1p9go
             receiverTemplateJSON['address'] = sel2.css('div.content-container > section::attr(data-address)').extract_first().strip()
+            addressSplit = receiverTemplateJSON['address'].split(',')
+
+            receiverTemplateJSON['address'] = addressSplit[0]
+            receiverTemplateJSON['city'] = addressSplit[1]
+            receiverTemplateJSON['state'] = addressSplit[2]
+            receiverTemplateJSON['zip'] = addressSplit[3]
 
             yield {
                 'id': self.count,
@@ -110,14 +113,13 @@ class JobsUpsSpider(scrapy.Spider):
         for sel in response.xpath('//*[@id="content"]'):
             receiverTemplateJSON = JobsupsItem()
             environmentTemplateJSON = JobsupsItem()
-            tempName = sel.css('#ajd-banner > section > div.ajd-job-title > div > div.ajd-job-button > a::attr(data-job-organization-id)').extract_first()
+            storeID = sel.css('#ajd-banner > section > div.ajd-job-title > div > div.ajd-job-button > a::attr(data-job-organization-id)').extract_first()
 
             receiverTemplateJSON['jobnameinputPrompt'] = "Job Post Name"
             receiverTemplateJSON['jobname'] = sel.css('#ajd-banner > section > div.ajd-job-title > div > div.ajd-job-heading > h1::text').extract_first()
             receiverTemplateJSON['jobidinputPrompt'] = "Job ID"
             receiverTemplateJSON['jobid'] = sel.css('#ajd-banner > section > div.ajd-job-title > div > div.ajd-job-button > a::attr(data-job-id)').extract_first()
             receiverTemplateJSON['hours'] = "1"
-            receiverTemplateJSON['zip'] = "na"
             receiverTemplateJSON['website'] = response.request.url
             receiverTemplateJSON['attn'] = "UPS"
             receiverTemplateJSON['attnemail'] = "na"
@@ -132,17 +134,12 @@ class JobsUpsSpider(scrapy.Spider):
                 # reciever input data
                 tempUrl = sel1.xpath('//*[@id="mapsection"]/span/a/@href').extract_first()
                 tempUrl = "https://www.jobs-ups.com" + tempUrl
-                # tempUrl = response.follow(tempUrl, self.parse_getStreeAddress).extract_first()
-                # tempUrl = response.follow(tempUrl, self.parse_test,  meta={'receiverTemplateJSON': receiverTemplateJSON})
-                # tempUrl = yield scrapy.Request(tempUrl, self.parse_test2, meta={'receiverTemplateJSON':receiverTemplateJSON})
-                #tempUrl = yield response.follow(tempUrl, self.parse_test2, meta={'item':item})
-                #receiverTemplateJSON['address'] = yield scrapy.Request(tempUrl, self.parse_test2, meta={'receiverTemplateJSON':receiverTemplateJSON, 'environmentTemplateJSON':environmentTemplateJSON})
 
                 tempCity = sel1.xpath('//*[@id="description"]/div[1]/span[1]/text()').extract_first().strip()
                 #receiverTemplateJSON['city'] = sel1.xpath('//*[@id="description"]/div[1]/span[1]/text()').extract_first().strip()
                 receiverTemplateJSON['city'] = "%s"%(tempCity)
                 receiverTemplateJSON['state'] = sel1.xpath('//*[@id="description"]/div[1]/span[2]/text()').extract_first().strip()
-                receiverTemplateJSON['name'] = "USP %s Store Id - %s"%(tempCity, tempName)
+                receiverTemplateJSON['name'] = "USP %s Store Id - %s"%(tempCity, storeID)
 
                 # environment input data
                 environmentTemplateJSON['companydescriptioninputPrompt'] = "Department Fullfilments"
