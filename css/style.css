@@ -17,3 +17,8 @@ body {
 jobs-source h3 {
   cursor: pointer;
 }
+.badge{
+    background-color: #48aa15;
+    height: 30px;
+    padding: 9px;
+}
