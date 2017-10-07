@@ -12,6 +12,7 @@ class JobsupsItem(scrapy.Item):
     # define the fields for your item here like:
     # formatted for document-writer Git repo
 
+    loopCounter = scrapy.Field()
     firstName = scrapy.Field()
     middleName = scrapy.Field()
     lastName = scrapy.Field()

@@ -13,6 +13,7 @@
 
     // Get List of Sources from sources.json
     var promise = DataService.getSources();
+
     promise.then(function (response) {
       // Store in local variable
       _this.sources = response.data.sources;
@@ -23,10 +24,29 @@
         promise.then(function(response) {
           // Append list of results to JSON Object
           _this.sources[key]["results"] = response.data;
-          console.log("key:", key);
+          console.log(response.data[1].id);
         });
       });
+
     });
+
+    $scope.saveMyJson = function(i){
+        $scope.documentwriterTemplate = DataService.getSources();
+        console.log("_this.sources", _this.sources[0]["results"][i-1]);
+        $scope.savedJSON = angular.toJson(_this.sources[0]["results"][i-1], true);
+
+        var blob = new Blob([$scope.savedJSON],{
+            type: "application/json;charset=utf-8;"
+        });
+        var downloadLink = document.createElement('a');
+        downloadLink.setAttribute('download', 'downloadJSON.json');
+        downloadLink.setAttribute('href', window.URL.createObjectURL(blob));
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+    }
+
+
   }
 
   function jobsSource() {
@@ -35,7 +55,6 @@
       templateUrl: 'src/jobs-source.directive.html'
     };
   }
-
 
   function excludeFilter() {
     return function (input, exclude) {
@@ -71,5 +90,6 @@
       return response;
     };
   }
+
 
 })();

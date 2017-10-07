@@ -8,6 +8,8 @@ class JobsUpsSpider(scrapy.Spider):
     allowed_domain = ["https://www.jobs-ups.com/"]
     #start_urls = [ 'https://www.jobs-ups.com/search-jobs/Florida' ]
 
+    count = 0
+
     def __init__(self, domain='', *args,**kwargs):
         super(JobsUpsSpider, self).__init__(*args, **kwargs)
         self.start_urls = [domain]
@@ -15,12 +17,15 @@ class JobsUpsSpider(scrapy.Spider):
     def parse(self, response):
         # scrape for state list links
         for result in response.xpath('//*[@id="search-results-list"]/ul/li'):
+
             upsurl = "https://www.jobs-ups.com" + result.xpath('a/@href').extract_first()
             yield response.follow(upsurl, self.parse_receiverTemplateJSON)
 
     # scrape the page the link led me to
     def parse_receiverTemplateJSON(self, response):
         # sender input data
+
+
         senderTemplateJSON = JobsupsItem()
         senderTemplateJSON['firstName'] = "Mezcel"
         senderTemplateJSON['middleName'] = " "
@@ -38,6 +43,8 @@ class JobsUpsSpider(scrapy.Spider):
             receiverTemplateJSON = JobsupsItem()
             environmentTemplateJSON = JobsupsItem()
             tempName = sel.css('#ajd-banner > section > div.ajd-job-title > div > div.ajd-job-button > a::attr(data-job-organization-id)').extract_first()
+
+
             receiverTemplateJSON['jobnameinputPrompt'] = "Job Post Name"
             receiverTemplateJSON['jobname'] = sel.css('#ajd-banner > section > div.ajd-job-title > div > div.ajd-job-heading > h1::text').extract_first()
             receiverTemplateJSON['jobidinputPrompt'] = "Job ID"
@@ -63,11 +70,14 @@ class JobsUpsSpider(scrapy.Spider):
                 receiverTemplateJSON['name'] = "USP %s Store Id - %s"%(tempCity, tempName)
 
                 # environment input data
-                environmentTemplateJSON['companydescriptioninputPrompt'] = "Department Duty"
+                environmentTemplateJSON['companydescriptioninputPrompt'] = "Department Fullfilments"
                 environmentTemplateJSON['companydescription'] = sel.css('#description > div.ats-description::text').extract_first().strip()
+
+            self.count = self.count + 1
 
             yield {
 
+                'id': self.count,
                 'url': receiverTemplateJSON['website'],
                 'title': receiverTemplateJSON['jobname'],
                 'address': "UPS Store Address ",
@@ -91,7 +101,7 @@ class JobsUpsSpider(scrapy.Spider):
                     "lead": receiverTemplateJSON['situation'],
                     "research":receiverTemplateJSON['website'],
                     "header":"A placeholder for a email header imported from a JSON file.",
-                    "body":"<p id='coverletterTime' class='w3-left-align'>{{today | date}}</p> <br> Dear <span class='highlighterDiv'>{{audience.attn}}</span>, <br><br> <p class='tab'>My name is <span class='highlighterDiv'>{{user.firstName}}</span> <span class='highlighterDiv'>{{user.lastName}}</span>. I learned about, <span class='highlighterDiv'>{{audience.name}}</span>, through <span class='highlighterDiv'>{{leads.leadtype}}</span>. I am a <span class='highlighterDiv'>{{desirability.applicationidentity}}</span>. Based on what I learned from <span class='highlighterDiv'>{{leads.followup}}</span>, I see that <span class='highlighterDiv'>{{environmentsetting.companydescription}}</span> Your target audience is geared toward <span class='highlighterDiv'>{{environmentsetting.companycustomers}}</span>. My interest in <span class = 'highlighterDiv' >{{desirability.skillarray}}</span> has inspired me to build upon what you started. <span class='highlighterDiv'>{{environmentsetting.companyphilosophy}}</span> <span class='highlighterDiv'>{{environmentsetting.companydistinguish}}</span> What you are doing is appealing. I would like to receive feedback or impressions regarding my eligability for <span class='highlighterDiv'>{{audience.jobname}}, {{audience.jobid}}</span>.</p>",
+                    "body":"<p id='coverletterTime' class='w3-left-align'>{{today | date}}</p> <br> Dear <span class='highlighterDiv'>{{audience.attn}}</span>, <br><br> <p class='tab'>My name is <span class='highlighterDiv'>{{user.firstName}}</span> <span class='highlighterDiv'>{{user.lastName}}</span>. I learned about, <span class='highlighterDiv'>{{audience.name}}</span>, through <span class='highlighterDiv'>{{leads.leadtype}}</span>. I am a <span class='highlighterDiv'>{{desirability.applicationidentity}}</span>. Based on what I learned from <span class='highlighterDiv'>{{leads.followup}}</span>, Department fullfillments <span class='highlighterDiv'>{{environmentsetting.companydescription}} needs to be filled by quified candidates.</span> Your target audience is geared toward <span class='highlighterDiv'>{{environmentsetting.companycustomers}}</span>. My interest in <span class = 'highlighterDiv' >{{desirability.skillarray}}</span> has inspired me to build upon what you started. <span class='highlighterDiv'>{{environmentsetting.companyphilosophy}}</span> <span class='highlighterDiv'>{{environmentsetting.companydistinguish}}</span> What you are doing is appealing. I would like to receive feedback or impressions regarding my eligability for <span class='highlighterDiv'>{{audience.jobname}}, {{audience.jobid}}</span>.</p>",
                     "footer":"A placeholder for a email footer imported from a JSON file."
                 },
                 "resumeTemplateJSON": {
