@@ -3,6 +3,9 @@
 ### Viewer For My Scrapes
 #### This branch will add some fairs in the area
 
+#### atom.io tools
+* [pretty-json](https://atom.io/packages/pretty-json)
+
 > The html was initially Semi-Cloned From: [kimberlythegeek/stackoverflow-denver_spider.py](https://github.com/kimberlythegeek/scrapy-project/blob/master/tutorial/spiders/stackoverflow-denver_spider.py)
 
 * this version is focused on modifying the jobsups spider for the document-writer template json input

@@ -1,8 +1,8 @@
 {
-	"sources": [
-		{
-			"name": "UPS Florida",
-			"file": "jobsups_Florida_Demo.json"
-		}
-	]
+    "sources": [
+        {
+            "name": "UPS Online",
+            "file": "jobsups_Demo.json"
+        }
+    ]
 }
