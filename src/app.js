@@ -23,6 +23,7 @@
         promise.then(function(response) {
           // Append list of results to JSON Object
           _this.sources[key]["results"] = response.data;
+          console.log("key:", key);
         });
       });
     });

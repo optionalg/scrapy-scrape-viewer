@@ -14,9 +14,7 @@ class JobsUpsSpider(scrapy.Spider):
 
     def parse(self, response):
         # scrape for state list links
-        for result in response.xpath('//*[@id="search-results-list"]/ul/li[3]'):
-
-
+        for result in response.xpath('//*[@id="search-results-list"]/ul/li'):
             upsurl = "https://www.jobs-ups.com" + result.xpath('a/@href').extract_first()
             yield response.follow(upsurl, self.parse_receiverTemplateJSON)
 
@@ -69,6 +67,13 @@ class JobsUpsSpider(scrapy.Spider):
                 environmentTemplateJSON['companydescription'] = sel.css('#description > div.ats-description::text').extract_first().strip()
 
             yield {
+
+                'url': receiverTemplateJSON['website'],
+                'title': receiverTemplateJSON['jobname'],
+                'address': "UPS Store Address ",
+                'company': receiverTemplateJSON['name'],
+                'date': datetime.datetime.now().strftime ("%Y%m%d"),
+
                 'senderTemplateJSON': senderTemplateJSON,
                 'receiverTemplateJSON': receiverTemplateJSON,
                 'environmentTemplateJSON': environmentTemplateJSON,
@@ -90,9 +95,8 @@ class JobsUpsSpider(scrapy.Spider):
                     "footer":"A placeholder for a email footer imported from a JSON file."
                 },
                 "resumeTemplateJSON": {
-                    "header":"<p align='center'><span class='highlighterDiv'>{{user.firstName}} {{user.middleName}} {{user.lastName}}<br>{{user.address}}, {{user.city}}, {{user.state}}, {{user.zip}}<br> {{user.phone}} {{user.email}}</span></p> <h3 align='center'>Resume</h3><hr> <p>I wish to contribute my labor and service to <span class='highlighterDiv'>{{audience.jobname}}</span>, {{audience.jobid}}</span>, for <span class='highlighterDiv'>{{audience.name}}</span>. Bellow is a keyword summary stating the knowledge set which forged my personality and perspective as a developer.</p>",
-                    "body":"<p><b>Services</b></p><p><center><table><tr><td>Embedded System Analysis</td><td>Debugging &amp; Troubleshooting</td><td>Testing &amp; Documentation</td></tr><tr><td>Software Development</td><td>Requirements Management</td><td>Project Management</td></tr><tr><td>Coding &amp; Scripting</td><td>GUI Design</td><td>Database Design</td></tr></table></center></p><p><b>Technology Summary</b></p><p><u>Programming</u>: C, C ++, C#, XML, CSV, SVG, MySQL, MSSql, HTML, VB.Net, ASP.NET, ADO.NET, LINQ, Java, JavaScript, AngularJS, jQuery, CSS, and PHP</p><p><u>Development Tools</u>: MS Visual Studio 2012, MS Sql Server Management Studio, MySql Workbench, WAMP Server, Oracle NetBeans IDE, Notepad ++, Inkscape and Sketchup (CAD), MS Office Suite</p><p><u>Systems</u>: Windows, Dot NET</p>",
-                    "footer":"A placeholder for a resume footer imported from a JSON file."
+                    "header":"<p align='center'><span class='highlighterDiv'>{{user.firstName}} {{user.middleName}} {{user.lastName}}<br>{{user.address}}, {{user.city}}, {{user.state}}, {{user.zip}}<br> {{user.phone}} {{user.email}}</span></p> <h3 align='center'>Resume</h3><hr> <p>I wish to contribute my labor and service to <span class='highlighterDiv'>{{audience.jobname}}</span>, {{audience.jobid}}</span>, for <span class='highlighterDiv'>{{audience.name}}</span>. Bellow is a keyword summary stating the knowledge, attitudes, and tastes I bring to the UPS culture and job site setting.</p>",
+                    "body":"<p><b>Services</b></p><p><center><table><tr><td>keyword</td><td>keyword</td><td>keyword</td></tr><tr><td>keyword</td><td>keyword</td><td>keyword</td></tr><tr><td>keyword</td><td>keyword</td><td>keyword</td></tr></table></center></p>"
                 },
                 "coverletterTemplateJSON": {
                     "header": "<p id='coverletterTime' class='w3-left-align'>{{today | date}}</p><p><span class='highlighterDiv'>{{audience.attn}}</span><br><span class='highlighterDiv'>{{audience.name}}</span><br><span class='highlighterDiv'>{{audience.zip}}</span></p><br>",
