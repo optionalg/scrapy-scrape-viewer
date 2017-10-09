@@ -14,6 +14,6 @@ cd jobsups
 scrapy crawl jobsups -a domain='https://www.jobs-ups.com/search-jobs/Florida,https://www.jobs-ups.com/search-jobs/Georgia,https://www.jobs-ups.com/search-jobs/Alabama' -o ../../jobsups_Demo.json
 # deactivate virtualenv scrapyvirtualenv
 deactivate
-# run in firefox
-# firefox /home/mezcel/github/scrapy-scrape-viewer/index.html
+run in firefox
+firefox /home/mezcel/github/scrapy-scrape-viewer/index.html
 # exit

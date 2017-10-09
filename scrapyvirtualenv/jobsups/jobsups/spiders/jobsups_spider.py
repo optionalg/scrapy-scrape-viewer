@@ -9,59 +9,49 @@ class JobsUpsSpider(scrapy.Spider):
     #start_urls = [ 'https://www.jobs-ups.com/search-jobs/Florida' ]
 
     count = 0
-    STREETADDRESS = "123 abc st., XYZ, LM 12345" # i am using a global var because i am not doing item class/fields crorectly
-    TMPURL = "htp://www.idontknowpython.com/ishouldnt-needa-global4-this" # https://stackoverflow.com/questions/41634126/multiple-nested-request-with-scrapy
-
-    '''
-        def __init__(self, domain='', *args,**kwargs):
-            super(JobsUpsSpider, self).__init__(*args, **kwargs)
-            self.start_urls = [domain]
-    '''
 
     def __init__(self, domain='', *args, **kwargs):
         super(JobsUpsSpider, self).__init__(*args, **kwargs)
         domain = domain.split(',')
         self.start_urls = domain
 
-
     def parse(self, response):
         # scrape for state list links
         for result in response.xpath('//*[@id="search-results-list"]/ul/li'):
-
-            #upsurl = "https://www.jobs-ups.com" + result.xpath('a/@href').extract_first()
-            upsurl = result.xpath('a/@href').extract_first()
-            upsurl = "".join(["https://www.jobs-ups.com", upsurl])
+            upsurl = "https://www.jobs-ups.com" + result.xpath('a/@href').extract_first()
             yield response.follow(upsurl, self.parse_receiverTemplateJSON)
 
+    # render last stage of scrapy
+    # the map and contacts page
+    def parse_MapAddressPage(self, response):
+        # count waypoint
+        self.count = self.count + 1
 
-    def parse_test1(self, response):
-        for sel1 in response.xpath('//*[@id="description"]'):
-            # reciever input data
-            tempUrl = sel1.xpath('//*[@id="mapsection"]/span/a/@href').extract_first()
-            yield response.follow(tempUrl, self.parse_test2)
-
-
-    def parse_test2(self, response):
         senderTemplateJSON = response.meta['senderTemplateJSON']
         receiverTemplateJSON = response.meta['receiverTemplateJSON']
         environmentTemplateJSON = response.meta['environmentTemplateJSON']
+
+        # re-inputs address and contact based of formal location
+        # it will overwrite the same information scraped from the previous page scrape
         for sel2 in response.css('#content'):
             # https://groups.google.com/forum/#!topic/scrapy-users/lX5lHQ1p9go
-            receiverTemplateJSON['address'] = sel2.css('div.content-container > section::attr(data-address)').extract_first().strip()
-            addressSplit = receiverTemplateJSON['address'].split(',')
+            addressString = sel2.css('div.content-container > section::attr(data-address)').extract_first().strip()
+            addressArray = addressString.split(',')
 
-            receiverTemplateJSON['address'] = addressSplit[0]
-            receiverTemplateJSON['city'] = addressSplit[1]
-            receiverTemplateJSON['state'] = addressSplit[2]
-            receiverTemplateJSON['zip'] = addressSplit[3]
+            receiverTemplateJSON['address'] = addressArray[0]
+            receiverTemplateJSON['city'] = addressArray[1]
+            receiverTemplateJSON['state'] = addressArray[2]
+            receiverTemplateJSON['zip'] = addressArray[3]
 
             yield {
+                #json for scrapy-viewer
                 'id': self.count,
                 'url': receiverTemplateJSON['website'],
                 'title': receiverTemplateJSON['jobname'],
-                'address': receiverTemplateJSON['address'],
+                'address': addressString,
                 'company': receiverTemplateJSON['name'],
                 'date': datetime.datetime.now().strftime ("%Y%m%d"),
+                # json for document-writer
                 'senderTemplateJSON': senderTemplateJSON,
                 'receiverTemplateJSON': receiverTemplateJSON,
                 'environmentTemplateJSON': environmentTemplateJSON,
@@ -94,7 +84,9 @@ class JobsUpsSpider(scrapy.Spider):
             }
 
 
-    # scrape the page the link led me to
+    # scrape the start page linked me to
+    # the bulk of the document-writer json will be written here
+    # contains data about what job I will apply to
     def parse_receiverTemplateJSON(self, response):
         # sender input data
         senderTemplateJSON = JobsupsItem()
@@ -109,8 +101,9 @@ class JobsUpsSpider(scrapy.Spider):
         senderTemplateJSON['email'] = "mezcel@mail.com"
         senderTemplateJSON['myUrl'] = "https://github.com/mezcel"
 
-        # reciever input data
+        # reciever input data as viewed from the main page
         for sel in response.xpath('//*[@id="content"]'):
+
             receiverTemplateJSON = JobsupsItem()
             environmentTemplateJSON = JobsupsItem()
             storeID = sel.css('#ajd-banner > section > div.ajd-job-title > div > div.ajd-job-button > a::attr(data-job-organization-id)').extract_first()
@@ -121,8 +114,8 @@ class JobsUpsSpider(scrapy.Spider):
             receiverTemplateJSON['jobid'] = sel.css('#ajd-banner > section > div.ajd-job-title > div > div.ajd-job-button > a::attr(data-job-id)').extract_first()
             receiverTemplateJSON['hours'] = "1"
             receiverTemplateJSON['website'] = response.request.url
-            receiverTemplateJSON['attn'] = "UPS"
-            receiverTemplateJSON['attnemail'] = "na"
+            receiverTemplateJSON['attn'] = "United Postal Service"
+            receiverTemplateJSON['attnemail'] = sel.css('#ajd-banner > section > div.ajd-job-title > div > div.ajd-job-button > a::attr(href)').extract_first()
             receiverTemplateJSON['phone'] = "na"
             receiverTemplateJSON['situation'] = "openings listed on www.jobs-ups.com"
 
@@ -135,8 +128,8 @@ class JobsUpsSpider(scrapy.Spider):
                 tempUrl = sel1.xpath('//*[@id="mapsection"]/span/a/@href').extract_first()
                 tempUrl = "https://www.jobs-ups.com" + tempUrl
 
+                # pre-contacts for reciever
                 tempCity = sel1.xpath('//*[@id="description"]/div[1]/span[1]/text()').extract_first().strip()
-                #receiverTemplateJSON['city'] = sel1.xpath('//*[@id="description"]/div[1]/span[1]/text()').extract_first().strip()
                 receiverTemplateJSON['city'] = "%s"%(tempCity)
                 receiverTemplateJSON['state'] = sel1.xpath('//*[@id="description"]/div[1]/span[2]/text()').extract_first().strip()
                 receiverTemplateJSON['name'] = "USP %s Store Id - %s"%(tempCity, storeID)
@@ -145,6 +138,4 @@ class JobsUpsSpider(scrapy.Spider):
                 environmentTemplateJSON['companydescriptioninputPrompt'] = "Department Fullfilments"
                 environmentTemplateJSON['companydescription'] = sel.css('#description > div.ats-description::text').extract_first().strip()
 
-                self.count = self.count + 1
-
-                yield scrapy.Request(tempUrl, self.parse_test2, meta={'senderTemplateJSON':senderTemplateJSON, 'receiverTemplateJSON':receiverTemplateJSON, 'environmentTemplateJSON':environmentTemplateJSON})
+                yield scrapy.Request(tempUrl, self.parse_MapAddressPage, meta={'senderTemplateJSON':senderTemplateJSON, 'receiverTemplateJSON':receiverTemplateJSON, 'environmentTemplateJSON':environmentTemplateJSON})
