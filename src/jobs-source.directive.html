@@ -6,9 +6,9 @@
 <table class="table table-hover table-striped" ng-if="source.state">
     <tr class="row result" ng-repeat="result in source.results | filter: jobs.include | excludeFilter: jobs.exclude | filter: {title: ''}">
         <td class="col-xs-2">{{ result.date }}
-            <button class="btn btn-default" ng-click="saveMyJson(result.id)">
+            <button class="btn btn-default" ng-click="saveMyJson(source.id, result.id)">
                 <span class="glyphicon glyphicon-file"></span>
-                <span> Apply {{ result.id }}</span>
+                <span> Apply {{ source.id }}-{{ result.id }}</span>
             </button>
         </td>
         <td class="col-xs-6">

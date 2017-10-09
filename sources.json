@@ -1,18 +1,22 @@
 {
     "sources": [
         {
+            "id": 0,
             "name": "UPS",
             "file": "jobsups_Demo.json"
         },
         {
+            "id": 1,
             "name": "Stackoverflow",
             "file": "stackoverflow_Demo.json"
         },
         {
+            "id": 2,
             "name": "Expresspros",
             "file": "expresspros_Demo.json"
         },
         {
+            "id": 3,
             "name": "Targeted Job Fairs",
             "file": "targetedjobfairs_Demo.json"
         }

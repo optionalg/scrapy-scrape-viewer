@@ -1,5 +1,7 @@
+
 (function() {
     'use strict';
+
 
     angular.module('jobListings', [])
         .controller('JobsController', JobsController)
@@ -9,7 +11,10 @@
 
     JobsController.$inject = ['$scope', 'DataService'];
 
+
+
     function JobsController($scope, DataService) {
+
         var _this = this;
 
         // Get List of Sources from sources.json
@@ -25,16 +30,17 @@
                 promise.then(function(response) {
                     // Append list of results to JSON Object
                     _this.sources[key]["results"] = response.data;
-                    console.log(response.data[1].id);
+                    console.log("_this.sources", _this.sources);
                 });
             });
 
         });
 
-        $scope.saveMyJson = function(i) {
+        $scope.saveMyJson = function(key, i) {
+            //<button class="btn btn-default" ng-click="saveMyJson(idKey, result.id)">
             $scope.documentwriterTemplate = DataService.getSources();
-            console.log("_this.sources", _this.sources[0]["results"][i - 1]);
-            $scope.savedJSON = angular.toJson(_this.sources[0]["results"][i - 1], true);
+
+            $scope.savedJSON = angular.toJson(_this.sources[key]["results"][i - 1], true);
 
             var blob = new Blob([$scope.savedJSON], {
                 type: "application/json;charset=utf-8;"
