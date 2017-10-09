@@ -83,7 +83,6 @@ class JobsUpsSpider(scrapy.Spider):
                 }
             }
 
-
     # scrape the start page linked me to
     # the bulk of the document-writer json will be written here
     # contains data about what job I will apply to
