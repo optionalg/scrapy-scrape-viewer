@@ -1,8 +1,16 @@
 {
     "sources": [
         {
-            "name": "UPS Online",
+            "name": "UPS",
             "file": "jobsups_Demo.json"
+        },
+        {
+            "name": "Stackoverflow",
+            "file": "stackoverflow_Demo.json"
+        },
+        {
+            "name": "Expresspros",
+            "file": "expresspros_Demo.json"
         }
     ]
 }

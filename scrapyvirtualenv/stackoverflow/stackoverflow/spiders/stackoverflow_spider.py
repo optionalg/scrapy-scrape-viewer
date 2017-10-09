@@ -9,7 +9,8 @@ class StackOverflowSpider(scrapy.Spider):
 
     def __init__(self, domain='', *args,**kwargs):
         super(StackOverflowSpider, self).__init__(*args, **kwargs)
-        self.start_urls = [domain]
+        domain = domain.split(',')
+        self.start_urls = domain
 
     def parse(self, response):
         for result in response.css('div.main div.-job-summary'):

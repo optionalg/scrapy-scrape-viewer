@@ -53,3 +53,5 @@ class JobsupsItem(scrapy.Item):
     knowledgearray = scrapy.Field()
     abilityarrayinputPrompt = scrapy.Field()
     abilityarray = scrapy.Field()
+
+    pass

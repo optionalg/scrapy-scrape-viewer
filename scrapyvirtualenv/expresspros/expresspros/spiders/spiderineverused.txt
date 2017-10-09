@@ -1,0 +1,135 @@
+import scrapy
+from expresspros.items import ExpressprosItem
+
+import datetime
+
+class ExpressprosSpider(scrapy.Spider):
+    name = "expresspros"
+    allowed_domain = ["https://www.expresspros.com/"]
+    # start_urls = ["https://workforce.expresspros.com/locations/state/Alabama", "https://workforce.expresspros.com/locations/state/Georgia", "https://workforce.expresspros.com/locations/state/Florida"]
+
+    def __init__(self, domain='', *args,**kwargs):
+        super(ExpressprosSpider, self).__init__(*args, **kwargs)
+        domain = domain.split(',')
+        self.start_urls = domain
+
+        count = 0
+
+    # tutorial guidance: https://doc.scrapy.org/en/latest/intro/tutorial.html#more-examples-and-patterns
+    def parse(self, response):
+        receiverTemplateJSON = ExpressprosItem()
+
+        for href1 in response.css('#main > div > div > div > div.col-md-8.col-sm-8.col-xs-8.links > div:nth-child(3)'):
+            # use state to temp hold a link instead of a state name
+            receiverTemplateJSON['state'] = response.request.url
+
+            linkToCity = href1.css('a::attr(href)').extract_first()
+
+            yield response.follow(linkToCity, self.parse_JobsInCity, meta={'receiverTemplateJSON':receiverTemplateJSON})
+
+    def parse_JobsInCity(self, response):
+        receiverTemplateJSON = response.meta['receiverTemplateJSON']
+
+        for href2 in response.css('div.widgetBody > div.row  > div.col-sm-3.col-md-2'):
+            linkToJobPost = href2.css('a::attr(href)').extract_first()
+            test = response.request.url
+
+            yield response.follow(linkToJobPost, self.parse_JobsPost, meta={'receiverTemplateJSON':receiverTemplateJSON})
+
+    def parse_JobsPost(self, response):
+        receiverTemplateJSON = response.meta['receiverTemplateJSON']
+
+        senderTemplateJSON = ExpressprosItem()
+        environmentTemplateJSON = ExpressprosItem()
+        relationshipTemplateJSON = ExpressprosItem()
+
+        stateLink = receiverTemplateJSON['state']
+        for sel in response.css('#main > div > form'):
+            if (stateLink == 'https://workforce.expresspros.com/locations/state/Alabama'):
+                self.count = self.count + 1
+
+                postName = sel.css('#main > div > form > div > h3').extract_first()
+                pay = sel.css('div > p:nth-child(3)::text').extract_first()
+                email = sel.css('#main > div > form > div > ol > li:nth-child(2) > a::attr(href)').extract_first()
+                attn = sel.css('#main > div > form > div > ol > li:nth-child(2) > strong::text').extract_first()
+                requirements = sel.css('#main > div > form > div > ul:nth-child(8)::text').extract_first()
+                office = sel.css('#main > div > form > div > p:nth-child(16)::text').extract_first()
+                streetAddress = sel.css('#main > div > form > div > p:nth-child(17)::text').extract_first()
+                cityStateZip = sel.css('#main > div > form > div > p:nth-child(18)::text').extract_first()
+                phone = sel.css('#main > div > form > div > p:nth-child(19)::text').extract_first()
+
+                receiverTemplateJSON['jobnameinputPrompt'] = "Jop Post"
+                receiverTemplateJSON['jobname'] = postName
+                receiverTemplateJSON['jobidinputPrompt'] = "pay"
+                receiverTemplateJSON['jobid'] = pay
+                receiverTemplateJSON['hours'] = "1"
+                receiverTemplateJSON['name'] = office
+                receiverTemplateJSON['address'] = streetAddress
+                receiverTemplateJSON['city'] = cityStateZip
+                receiverTemplateJSON['state'] = cityStateZip
+                receiverTemplateJSON['zip'] = cityStateZip
+                receiverTemplateJSON['website'] = response.request.url
+                receiverTemplateJSON['attn'] = attn
+                receiverTemplateJSON['attnemail'] = email
+                receiverTemplateJSON['phone'] = phone
+                receiverTemplateJSON['situation'] = "Express Pros Website"
+
+                yield {
+                    #json for scrapy-viewer
+                    'id': self.count,
+                    'url': receiverTemplateJSON['website'],
+                    'title': receiverTemplateJSON['jobname'],
+                    'address': addressString,
+                    'company': receiverTemplateJSON['name'],
+                    'date': datetime.datetime.now().strftime ("%Y%m%d"),
+                    # json for document-writer
+                    'receiverTemplateJSON': receiverTemplateJSON,
+
+                }
+            if (stateLink == 'https://workforce.expresspros.com/locations/state/Georgia'):
+
+            if (stateLink == 'https://workforce.expresspros.com/locations/state/Florida'):
+
+
+
+'''
+yield {
+    #json for scrapy-viewer
+    'id': self.count,
+    'url': receiverTemplateJSON['website'],
+    'title': receiverTemplateJSON['jobname'],
+    'address': addressString,
+    'company': receiverTemplateJSON['name'],
+    'date': datetime.datetime.now().strftime ("%Y%m%d"),
+    # json for document-writer
+    'senderTemplateJSON': senderTemplateJSON,
+    'receiverTemplateJSON': receiverTemplateJSON,
+    'environmentTemplateJSON': environmentTemplateJSON,
+    'relationshipTemplateJSON': {
+        "applicationidentityinputPrompt":"As a ...",
+        "applicationidentity": "front-end developer",
+        "skillarrayinputPrompt":"You are looking for talent who have skills in ...",
+        "skillarray": "enter skills here",
+        "knowledgearrayinputPrompt":"... , and I ...",
+        "knowledgearray": "enter knowledge here",
+        "abilityarrayinputPrompt":"... , my abilities include ...",
+        "abilityarray": "enter ability here"
+    },
+    "emailletterTemplateJSON": {
+        "lead": receiverTemplateJSON['situation'],
+        "research":receiverTemplateJSON['website'],
+        "header":"A placeholder for a email header imported from a JSON file.",
+        "body":"<p id='coverletterTime' class='w3-left-align'>{{today | date}}</p> <br> Dear <span class='highlighterDiv'>{{audience.attn}}</span>, <br><br> <p class='tab'>My name is <span class='highlighterDiv'>{{user.firstName}}</span> <span class='highlighterDiv'>{{user.lastName}}</span>. I learned about, <span class='highlighterDiv'>{{audience.name}}</span>, through <span class='highlighterDiv'>{{leads.leadtype}}</span>. I am a <span class='highlighterDiv'>{{desirability.applicationidentity}}</span>. Based on what I learned from <span class='highlighterDiv'>{{leads.followup}}</span>, Department fullfillments <span class='highlighterDiv'>{{environmentsetting.companydescription}} needs to be filled by quified candidates.</span> Your target audience is geared toward <span class='highlighterDiv'>{{environmentsetting.companycustomers}}</span>. My interest in <span class = 'highlighterDiv' >{{desirability.skillarray}}</span> has inspired me to build upon what you started. <span class='highlighterDiv'>{{environmentsetting.companyphilosophy}}</span> <span class='highlighterDiv'>{{environmentsetting.companydistinguish}}</span> What you are doing is appealing. I would like to receive feedback or impressions regarding my eligability for <span class='highlighterDiv'>{{audience.jobname}}, {{audience.jobid}}</span>.</p>",
+        "footer":"A placeholder for a email footer imported from a JSON file."
+    },
+    "resumeTemplateJSON": {
+        "header":"<p align='center'><span class='highlighterDiv'>{{user.firstName}} {{user.middleName}} {{user.lastName}}<br>{{user.address}}, {{user.city}}, {{user.state}}, {{user.zip}}<br> {{user.phone}} {{user.email}}</span></p> <h3 align='center'>Resume</h3><hr> <p>I wish to contribute my labor and service to <span class='highlighterDiv'>{{audience.jobname}}</span>, {{audience.jobid}}</span>, for <span class='highlighterDiv'>{{audience.name}}</span>. Bellow is a keyword summary stating the knowledge, attitudes, and tastes I bring to the UPS culture and job site setting.</p>",
+        "body":"<p><b>Services</b></p><p><center><table><tr><td>keyword</td><td>keyword</td><td>keyword</td></tr><tr><td>keyword</td><td>keyword</td><td>keyword</td></tr><tr><td>keyword</td><td>keyword</td><td>keyword</td></tr></table></center></p>"
+    },
+    "coverletterTemplateJSON": {
+        "header": "<p id='coverletterTime' class='w3-left-align'>{{today | date}}</p><p><span class='highlighterDiv'>{{audience.attn}}</span><br><span class='highlighterDiv'>{{audience.name}}</span><br><span class='highlighterDiv'>{{audience.zip}}</span></p><br>",
+        "body": "<p>Dear <span class='highlighterDiv'>{{audience.attn}}</span>,</p> <p class='tab'>My name is <span class='highlighterDiv'>{{user.firstName}}</span> <span class='highlighterDiv'>{{user.middleName}}</span> <span class='highlighterDiv'>{{user.lastName}}</span>. I discovered <span class='highlighterDiv'>{{audience.situation}}</span>, at <span class='highlighterDiv'>{{audience.name}}</span>, and I want to contribute to your work. I consider myself skilled in <span class='highlighterDiv'>{{desirability.skillarray}}</span>. As a <span class='highlighterDiv'>{{desirability.applicationidentity}}</span>, <span class='highlighterDiv'>{{desirability.abilityarray}}</span>. I derive a personal satisfaction and pride when I fulfill the goals and expectations of <span class='highlighterDiv'>{{desirability.knowledgearray}}</span>. I am seeking to diversify my experience portfolio and further my way of life as a <span class='highlighterDiv'>{{desirability.applicationidentity}}</span>.</p><p class='tab'><span class='highlighterDiv'>{{audience.attn}}</span>, thank you for doing what you do, and thank you for taking the time to read how <span class='highlighterDiv'>{{audience.name}}</span> has inspired my own work.</p>",
+        "footer": "<br><p>Sincerely,</p><br><br> <p><span class='highlighterDiv'>{{user.firstName}}</span> <span class='highlighterDiv'>{{user.middleName}}</span> <span class='highlighterDiv'>{{user.lastName}}</span><br><span class='highlighterDiv'>{{user.address}}</span>, <span class='highlighterDiv'>{{user.city}}</span>, <span class='highlighterDiv'>{{user.state}}</span>, <span class='highlighterDiv'>{{user.zip}}</span><br><span class='highlighterDiv'>{{user.email}}</span></p>"
+    }
+}
+'''
