@@ -1,23 +1,28 @@
 .fa {
-  font-size: 1.4rem;
+    font-size: 1.4rem;
 }
-.mytitle{
-  padding: 3rem 1.5rem;
-  text-align: center;
+
+.mytitle {
+    padding: 3rem 1.5rem;
+    text-align: center;
 }
-.scrapylogo{
+
+.scrapylogo {
     width: 100%;
     height: auto;
     max-width: 500px;
 }
+
 body {
     padding-top: 5rem;
-  padding: 3rem;
+    padding: 3rem;
 }
+
 jobs-source h3 {
-  cursor: pointer;
+    cursor: pointer;
 }
-.badge{
+
+.badge {
     background-color: #48aa15;
     height: 30px;
     padding: 9px;

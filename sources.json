@@ -11,6 +11,10 @@
         {
             "name": "Expresspros",
             "file": "expresspros_Demo.json"
+        },
+        {
+            "name": "Targeted Job Fairs",
+            "file": "targetedjobfairs_Demo.json"
         }
     ]
 }

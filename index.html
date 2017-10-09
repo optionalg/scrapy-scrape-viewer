@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="jobListings">
-  <head>
+
+<head>
     <title>Viewer for Scrapy Scrapes</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
@@ -10,64 +11,54 @@
     <link href="font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
-  </head>
+</head>
 
-  <body ng-controller="JobsController as jobs">
+<body ng-controller="JobsController as jobs">
     <div class="container-fluid">
 
-      <div class="row">
-        <div class="col-xs-6 col-xs-offset-3">
-            <div class="mytitle">
-                <a href="https://scrapy.org/"><img src="img/Scrapy-Logo-Horizontal.png" class="scrapylogo" alt="Linux Scrapy"></a>
-                <h1>View Scrapy Scrapes</h1>
-                Use this as a way to view and filter through <code>-o .json</code> scrape results.
+        <div class="row">
+            <div class="col-xs-6 col-xs-offset-3">
+                <div class="mytitle">
+                    <a href="https://scrapy.org/"><img src="img/Scrapy-Logo-Horizontal.png" class="scrapylogo" alt="Linux Scrapy"></a>
+                    <h1>View Scrapy Scrapes</h1> Use this as a way to view and filter through <code>-o .json</code> scrape results.
+                </div>
+
+                <label for="include">Include:</label>
+                <div class="input-group">
+                    <span class="input-group-addon" id="include-addon">
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                    </span>
+                    <input id="include" type="text" class="form-control" ng-model="jobs.include" aria-describedby="include-addon" />
+                </div>
+                <p>
+                    UPS uses full state names (ex:Alabama)
+                    <br>
+                    Stackoverflow and Expresspros uses abreviations (ex:Al)
+                </p>
+                <label for="exclude">Exclude:</label>
+                <div class="input-group">
+                    <span class="input-group-addon" id="exclude-addon">
+                        <i class="fa fa-ban" aria-hidden="true"></i>
+                    </span>
+                    <input id="exclude" type="text" class="form-control" ng-model="jobs.exclude" aria-describedby="exclude-addon" />
+                </div>
+
+                <!-- html found in src/jobs-source.directive.html -->
+                <jobs-source ng-repeat="source in jobs.sources"></jobs-source>
+
             </div>
-
-          <label for="include">Include:</label>
-          <div class="input-group">
-            <span class="input-group-addon" id="include-addon">
-              <i class="fa fa-check" aria-hidden="true"></i>
-            </span>
-            <input
-              id="include"
-              type="text"
-              class="form-control"
-              ng-model="jobs.include"
-              aria-describedby="include-addon" />
-          </div>
-            <p>
-                UPS uses full state names (ex:Alabama)
-                <br>
-                Stackoverflow and Expresspros uses abreviations (ex:Al)
-            </p>
-          <label for="exclude">Exclude:</label>
-          <div class="input-group">
-            <span class="input-group-addon" id="exclude-addon">
-              <i class="fa fa-ban" aria-hidden="true"></i>
-            </span>
-            <input
-              id="exclude"
-              type="text"
-              class="form-control"
-              ng-model="jobs.exclude"
-              aria-describedby="exclude-addon" />
-          </div>
-
-          <!-- html found in src/jobs-source.directive.html -->
-          <jobs-source ng-repeat="source in jobs.sources"></jobs-source>
-
         </div>
-      </div> <!-- .row -->
-    </div><!-- .container-fluid -->
-    <script
-      src="src/jquery-3.1.1.min.js"></script>
-    <script
-      src="bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+        <!-- .row -->
+    </div>
+    <!-- .container-fluid -->
+    <script src="src/jquery-3.1.1.min.js"></script>
+    <script src="bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
     <script src="lib/angular.min.js"></script>
     <script src="src/app.js"></script>
 
-  </body>
+</body>
 
-  <footer>
-  </footer>
+<footer>
+</footer>
+
 </html>
