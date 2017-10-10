@@ -20,8 +20,15 @@
             <div class="col-xs-8 col-xs-offset-2">
                 <div class="mytitle">
                     <a href="https://scrapy.org/" target="_blank"><img src="img/Scrapy-Logo-Horizontal.png" class="scrapylogo" alt="Linux Scrapy"></a>
-                    <h1>View Scrapy Scrapes</h1><p>Use this as a way to view and filter through <code>-o .json</code> scrape results in <a href="#" data-toggle="tooltip" title="On Chrome: Add ''--allow-file-access-from-files'' after Chrome's shortcut target, or run page via localhost server.">Firefox</a>.<p>
-                    <p>Crawl: <code>source /home/mezcel/github/scrapy-scrape-viewer/scrapy-scrape-viewer.sh</code></p>
+                    <h1>View Scrapy Scrapes</h1>
+                    <div class="subHeading">
+                        <p>
+                            Use this as a way to view and filter through <code>-o .json</code> scrape results in <a href="https://stackoverflow.com/a/27743373" target="_blabk" data-toggle="tooltip" title="On Chrome: Add ''--allow-file-access-from-files'' after Chrome's shortcut target, or run page via localhost server.">Firefox</a>.
+                        </p>
+                        <p>
+                            <p>Crawl: <code>source /home/mezcel/github/scrapy-scrape-viewer/scrapy-scrape-viewer.sh</code>
+                        </p>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-6">
@@ -32,18 +39,18 @@
                             </span>
                             <input id="include" type="text" class="form-control" ng-model="jobs.include" aria-describedby="include-addon" />
                         </div>
-                        <ul>
+                        <ul class="subHeading">
                             <li>UPS uses full state (ex:Alabama)</li>
                         </ul>
                     </div>
                     <div class="col-xs-6">
                         <label for="exclude">Exclude:</label>
                         <div class="input-group">
-                    <span class="input-group-addon" id="exclude-addon">
+                            <span class="input-group-addon" id="exclude-addon">
                         <i class="fa fa-ban" aria-hidden="true"></i>
                     </span>
-                    <input id="exclude" type="text" class="form-control" ng-model="jobs.exclude" aria-describedby="exclude-addon" />
-                </div>
+                            <input id="exclude" type="text" class="form-control" ng-model="jobs.exclude" aria-describedby="exclude-addon" />
+                        </div>
                     </div>
                 </div>
                 <!-- html template is in src/jobs-source.directive.html -->
