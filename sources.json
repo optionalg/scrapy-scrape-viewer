@@ -3,22 +3,26 @@
         {
             "id": 0,
             "name": "UPS",
-            "file": "jobsups_Demo.json"
+            "file": "jobsups_Demo.json",
+            "btnName": "UPS"
         },
         {
             "id": 1,
             "name": "Stackoverflow",
-            "file": "stackoverflow_Demo.json"
+            "file": "stackoverflow_Demo.json",
+            "btnName": "Stack"
         },
         {
             "id": 2,
             "name": "Expresspros",
-            "file": "expresspros_Demo.json"
+            "file": "expresspros_Demo.json",
+            "btnName": "Express"
         },
         {
             "id": 3,
             "name": "Targeted Job Fairs",
-            "file": "targetedjobfairs_Demo.json"
+            "file": "targetedjobfairs_Demo.json",
+            "btnName": "Fair"
         }
     ]
 }

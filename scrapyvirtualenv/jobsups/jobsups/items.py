@@ -53,5 +53,10 @@ class JobsupsItem(scrapy.Item):
     knowledgearray = scrapy.Field()
     abilityarrayinputPrompt = scrapy.Field()
     abilityarray = scrapy.Field()
+    lead = scrapy.Field()
+    research = scrapy.Field()
+    header = scrapy.Field()
+    body = scrapy.Field()
+    footer = scrapy.Field()
 
     pass

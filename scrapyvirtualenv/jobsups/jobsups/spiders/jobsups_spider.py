@@ -24,12 +24,17 @@ class JobsUpsSpider(scrapy.Spider):
     # render last stage of scrapy
     # the map and contacts page
     def parse_MapAddressPage(self, response):
+        emailletterTemplateJSON = JobsupsItem()
+        resumeTemplateJSON = JobsupsItem()
+        coverletterTemplateJSON = JobsupsItem()
+
         # count waypoint
         self.count = self.count + 1
 
         senderTemplateJSON = response.meta['senderTemplateJSON']
         receiverTemplateJSON = response.meta['receiverTemplateJSON']
         environmentTemplateJSON = response.meta['environmentTemplateJSON']
+        relationshipTemplateJSON = response.meta['relationshipTemplateJSON']
 
         # re-inputs address and contact based of formal location
         # it will overwrite the same information scraped from the previous page scrape
@@ -38,10 +43,21 @@ class JobsUpsSpider(scrapy.Spider):
             addressString = sel2.css('div.content-container > section::attr(data-address)').extract_first().strip()
             addressArray = addressString.split(',')
 
+            # receiverTemplateJSON
             receiverTemplateJSON['address'] = addressArray[0]
             receiverTemplateJSON['city'] = addressArray[1]
             receiverTemplateJSON['state'] = addressArray[2]
             receiverTemplateJSON['zip'] = addressArray[3]
+
+            # emailletterTemplateJSON
+            emailletterTemplateJSON['lead'] = receiverTemplateJSON['situation']
+            emailletterTemplateJSON['research'] = receiverTemplateJSON['website']
+            emailletterTemplateJSON['header'] = "na"
+            emailletterTemplateJSON['body'] = "na"
+            emailletterTemplateJSON['footer'] = "na"
+
+            # resumeTemplateJSON
+            # coverletterTemplateJSON
 
             yield {
                 #json for scrapy-viewer
@@ -49,25 +65,17 @@ class JobsUpsSpider(scrapy.Spider):
                 'url': receiverTemplateJSON['website'],
                 'title': receiverTemplateJSON['jobname'],
                 'address': addressString,
-                'company': receiverTemplateJSON['name'],
+                #'company': receiverTemplateJSON['name'],
+                'company': addressString,
                 'date': datetime.datetime.now().strftime ("%Y%m%d"),
                 # json for document-writer
                 'senderTemplateJSON': senderTemplateJSON,
                 'receiverTemplateJSON': receiverTemplateJSON,
                 'environmentTemplateJSON': environmentTemplateJSON,
-                'relationshipTemplateJSON': {
-                    "applicationidentityinputPrompt":"As a ...",
-                    "applicationidentity": "front-end developer",
-                    "skillarrayinputPrompt":"You are looking for talent who have skills in ...",
-                    "skillarray": "enter skills here",
-                    "knowledgearrayinputPrompt":"... , and I ...",
-                    "knowledgearray": "enter knowledge here",
-                    "abilityarrayinputPrompt":"... , my abilities include ...",
-                    "abilityarray": "enter ability here"
-                },
+                'relationshipTemplateJSON': relationshipTemplateJSON,
                 "emailletterTemplateJSON": {
-                    "lead": receiverTemplateJSON['situation'],
-                    "research":receiverTemplateJSON['website'],
+                    "lead": emailletterTemplateJSON['lead'],
+                    "research": emailletterTemplateJSON['research'],
                     "header":"A placeholder for a email header imported from a JSON file.",
                     "body":"<p id='coverletterTime' class='w3-left-align'>{{today | date}}</p> <br> Dear <span class='highlighterDiv'>{{audience.attn}}</span>, <br><br> <p class='tab'>My name is <span class='highlighterDiv'>{{user.firstName}}</span> <span class='highlighterDiv'>{{user.lastName}}</span>. I learned about, <span class='highlighterDiv'>{{audience.name}}</span>, through <span class='highlighterDiv'>{{leads.leadtype}}</span>. I am a <span class='highlighterDiv'>{{desirability.applicationidentity}}</span>. Based on what I learned from <span class='highlighterDiv'>{{leads.followup}}</span>, Department fullfillments <span class='highlighterDiv'>{{environmentsetting.companydescription}} needs to be filled by quified candidates.</span> Your target audience is geared toward <span class='highlighterDiv'>{{environmentsetting.companycustomers}}</span>. My interest in <span class = 'highlighterDiv' >{{desirability.skillarray}}</span> has inspired me to build upon what you started. <span class='highlighterDiv'>{{environmentsetting.companyphilosophy}}</span> <span class='highlighterDiv'>{{environmentsetting.companydistinguish}}</span> What you are doing is appealing. I would like to receive feedback or impressions regarding my eligability for <span class='highlighterDiv'>{{audience.jobname}}, {{audience.jobid}}</span>.</p>",
                     "footer":"A placeholder for a email footer imported from a JSON file."
@@ -102,9 +110,10 @@ class JobsUpsSpider(scrapy.Spider):
 
         # reciever input data as viewed from the main page
         for sel in response.xpath('//*[@id="content"]'):
-
             receiverTemplateJSON = JobsupsItem()
+            relationshipTemplateJSON = JobsupsItem()
             environmentTemplateJSON = JobsupsItem()
+
             storeID = sel.css('#ajd-banner > section > div.ajd-job-title > div > div.ajd-job-button > a::attr(data-job-organization-id)').extract_first()
 
             receiverTemplateJSON['jobnameinputPrompt'] = "Job Post Name"
@@ -119,8 +128,24 @@ class JobsUpsSpider(scrapy.Spider):
             receiverTemplateJSON['situation'] = "openings listed on www.jobs-ups.com"
 
             # environment input data
+            environmentTemplateJSON['companydescriptioninputPrompt'] = "Simplify Post Description"
+            environmentTemplateJSON['companydescription'] = sel.css('#anchor-overview > div > p::text').extract_first().strip()
             environmentTemplateJSON['companyphilosophyinputPrompt'] = "Expecations"
-            environmentTemplateJSON['companyphilosophy'] = sel.css('#anchor-overview > div > p::text').extract_first().strip()
+            environmentTemplateJSON['companyphilosophy'] = environmentTemplateJSON['companydescription']
+            environmentTemplateJSON['companycustomersinputPrompt'] = "na"
+            environmentTemplateJSON['companycustomers'] = "na"
+            environmentTemplateJSON['companydistinguishinputPrompt'] = "na"
+            environmentTemplateJSON['companydistinguish'] = "na"
+
+            # relationship input data
+            relationshipTemplateJSON['applicationidentityinputPrompt'] = "na"
+            relationshipTemplateJSON['applicationidentity'] = "na"
+            relationshipTemplateJSON['skillarrayinputPrompt'] = "Scrape Skills"
+            relationshipTemplateJSON['skillarray'] = environmentTemplateJSON['companydescription']
+            relationshipTemplateJSON['knowledgearrayinputPrompt'] = "na"
+            relationshipTemplateJSON['knowledgearray'] = "na"
+            relationshipTemplateJSON['abilityarrayinputPrompt'] = "Scrape Ability"
+            relationshipTemplateJSON['abilityarray'] = environmentTemplateJSON['companydescription']
 
             for sel1 in response.xpath('//*[@id="description"]'):
                 # reciever input data
@@ -131,10 +156,10 @@ class JobsUpsSpider(scrapy.Spider):
                 tempCity = sel1.xpath('//*[@id="description"]/div[1]/span[1]/text()').extract_first().strip()
                 receiverTemplateJSON['city'] = "%s"%(tempCity)
                 receiverTemplateJSON['state'] = sel1.xpath('//*[@id="description"]/div[1]/span[2]/text()').extract_first().strip()
-                receiverTemplateJSON['name'] = "USP %s Store Id - %s"%(tempCity, storeID)
+                receiverTemplateJSON['name'] = "USP %s Store id: %s"%(tempCity, storeID)
 
                 # environment input data
                 environmentTemplateJSON['companydescriptioninputPrompt'] = "Department Fullfilments"
                 environmentTemplateJSON['companydescription'] = sel.css('#description > div.ats-description::text').extract_first().strip()
 
-                yield scrapy.Request(tempUrl, self.parse_MapAddressPage, meta={'senderTemplateJSON':senderTemplateJSON, 'receiverTemplateJSON':receiverTemplateJSON, 'environmentTemplateJSON':environmentTemplateJSON})
+                yield scrapy.Request(tempUrl, self.parse_MapAddressPage, meta={'senderTemplateJSON':senderTemplateJSON, 'receiverTemplateJSON':receiverTemplateJSON, 'environmentTemplateJSON':environmentTemplateJSON, 'relationshipTemplateJSON':relationshipTemplateJSON})

@@ -81,6 +81,15 @@
         var _this = this;
 
         _this.getSources = function() {
+            /*
+            # Note:
+                * Chrome Error: Cross origin requests are only supported for protocol schemes: http, data, chrome, chrome-extension, https.
+            # Resolve Error:
+                * Use Firefox
+                * Use localhost server
+                * Add --allow-file-access-from-files after Chrome`s shortcut target, and open new browse instance using this shortcut
+                * https://stackoverflow.com/questions/27742070/angularjs-error-cross-origin-requests-are-only-supported-for-protocol-schemes
+            */
             var response = $http({
                 method: 'GET',
                 url: ('sources.json'),

@@ -2,6 +2,10 @@
     font-size: 1.4rem;
 }
 
+.fa-firefox {
+    color: orange;
+}
+
 .mytitle {
     padding: 3rem 1.5rem;
     text-align: center;
@@ -10,7 +14,7 @@
 .scrapylogo {
     width: 100%;
     height: auto;
-    max-width: 500px;
+    max-width: 450px;
 }
 
 body {
@@ -19,11 +23,16 @@ body {
 }
 
 jobs-source h3 {
-    cursor: pointer;
+    /*cursor: pointer;*/
+    /*cursor: auto;*/
+    /* https://css-tricks.com/using-css-cursors/ */
+    display: flex;
+    cursor: help;
+    font-size: 20px;
 }
 
 .badge {
     background-color: #48aa15;
-    height: 30px;
-    padding: 9px;
+    height: 28px;
+    padding-top: 8px;
 }

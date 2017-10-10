@@ -40,7 +40,6 @@ class ExpressprosSpider(scrapy.Spider):
         item = response.meta['item']
 
         for sel in response.css('div.widgetBody > div.row'):
-            self.count = self.count + 1
             title = sel.css('div.col-sm-7 h3::text').extract_first()
             company = sel.css('div.col-sm-3 h3::text').extract_first().strip()
             company = company.replace(',A', ', A')
@@ -78,6 +77,8 @@ class ExpressprosSpider(scrapy.Spider):
 
                 addressZip = "addressState.split(' ')" + str(addressArrayLength)
                 addressZip = "addressZip[2]" + str(addressArrayLength)
+
+            self.count = self.count + 1
 
             yield {
                 'id': self.count,

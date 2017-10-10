@@ -8,11 +8,11 @@
         <td class="col-xs-2">{{ result.date }}
             <button class="btn btn-default" ng-click="saveMyJson(source.id, result.id)">
                 <span class="glyphicon glyphicon-file"></span>
-                <span> Apply {{ source.id }}-{{ result.id }}</span>
+                <span>{{ source.btnName }}_{{ result.id }}</span>
             </button>
         </td>
         <td class="col-xs-6">
-            <a ng-href="{{ result.url }}">{{ result.title }}</a>
+            <a ng-href="{{ result.url }}" target="_blank">{{ result.title }}</a>
         </td>
         <td class="col-xs-4">{{ result.company }}</td>
     </tr>
