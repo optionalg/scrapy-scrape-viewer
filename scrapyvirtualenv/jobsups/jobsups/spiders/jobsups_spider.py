@@ -52,9 +52,9 @@ class JobsUpsSpider(scrapy.Spider):
             # emailletterTemplateJSON
             emailletterTemplateJSON['lead'] = receiverTemplateJSON['situation']
             emailletterTemplateJSON['research'] = receiverTemplateJSON['website']
-            emailletterTemplateJSON['header'] = "na"
-            emailletterTemplateJSON['body'] = "na"
-            emailletterTemplateJSON['footer'] = "na"
+            emailletterTemplateJSON['header'] = "meznull"
+            emailletterTemplateJSON['body'] = "meznull"
+            emailletterTemplateJSON['footer'] = "meznull"
 
             # resumeTemplateJSON
             # coverletterTemplateJSON
@@ -124,7 +124,7 @@ class JobsUpsSpider(scrapy.Spider):
             receiverTemplateJSON['website'] = response.request.url
             receiverTemplateJSON['attn'] = "United Postal Service"
             receiverTemplateJSON['attnemail'] = sel.css('#ajd-banner > section > div.ajd-job-title > div > div.ajd-job-button > a::attr(href)').extract_first()
-            receiverTemplateJSON['phone'] = "na"
+            receiverTemplateJSON['phone'] = "meznull"
             receiverTemplateJSON['situation'] = "openings listed on www.jobs-ups.com"
 
             # environment input data
