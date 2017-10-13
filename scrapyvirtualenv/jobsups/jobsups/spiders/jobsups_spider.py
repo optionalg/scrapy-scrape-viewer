@@ -77,16 +77,16 @@ class JobsUpsSpider(scrapy.Spider):
                     "lead": emailletterTemplateJSON['lead'],
                     "research": emailletterTemplateJSON['research'],
                     "header":"A placeholder for a email header imported from a JSON file.",
-                    "body":"<p id='coverletterTime' class='w3-left-align'>{{today | date}}</p> <br> Dear <span class='highlighterDiv'>{{audience.attn}}</span>, <br><br> <p class='tab'>My name is <span class='highlighterDiv'>{{user.firstName}}</span> <span class='highlighterDiv'>{{user.lastName}}</span>. I learned about, <span class='highlighterDiv'>{{audience.name}}</span>, through <span class='highlighterDiv'>{{leads.leadtype}}</span>. I am a <span class='highlighterDiv'>{{desirability.applicationidentity}}</span>. Based on what I learned from <span class='highlighterDiv'>{{leads.followup}}</span>, Department fullfillments <span class='highlighterDiv'>{{environmentsetting.companydescription}} needs to be filled by quified candidates.</span> Your target audience is geared toward <span class='highlighterDiv'>{{environmentsetting.companycustomers}}</span>. My interest in <span class = 'highlighterDiv' >{{desirability.skillarray}}</span> has inspired me to build upon what you started. <span class='highlighterDiv'>{{environmentsetting.companyphilosophy}}</span> <span class='highlighterDiv'>{{environmentsetting.companydistinguish}}</span> What you are doing is appealing. I would like to receive feedback or impressions regarding my eligability for <span class='highlighterDiv'>{{audience.jobname}}, {{audience.jobid}}</span>.</p>",
+                    "body":"<p id='coverletterTime' class='w3-left-align'>{{today | date}}</p> <br> Dear <span class='highlighterDiv'>{{audience.attn}}</span>, <br><br> <p class='tab'>My name is <span class='highlighterDiv'>{{user.firstName}}</span> <span class='highlighterDiv'>{{user.lastName}}</span>. I learned about, <span class='highlighterDiv'>{{audience.name}}</span>, through <span class='highlighterDiv'>{{leads.leadtype}}</span>. <span class='highlighterDiv'>{{desirability.applicationidentity}}</span>. Based on what I learned from <span class='highlighterDiv'>{{leads.followup}}</span>, you are seeking the following. <span class='highlighterDiv'>{{environmentsetting.companydescription}}</span>. <span class='highlighterDiv'>{{environmentsetting.companycustomers}}</span>.  <span class = 'highlighterDiv' >{{desirability.skillarray}}</span>. This position and your company is appealing to me. <span class='highlighterDiv'>{{environmentsetting.companyphilosophy}}</span> <span class='highlighterDiv'>{{environmentsetting.companydistinguish}}</span>. I would like to receive feedback or impressions regarding my eligability for <span class='highlighterDiv'>{{audience.jobname}}, {{audience.jobid}}</span>.</p>",
                     "footer":"A placeholder for a email footer imported from a JSON file."
                 },
                 "resumeTemplateJSON": {
-                    "header":"<p align='center'><span class='highlighterDiv'>{{user.firstName}} {{user.middleName}} {{user.lastName}}<br>{{user.address}}, {{user.city}}, {{user.state}}, {{user.zip}}<br> {{user.phone}} {{user.email}}</span></p> <h3 align='center'>Resume</h3><hr> <p>I wish to contribute my labor and service to <span class='highlighterDiv'>{{audience.jobname}}</span>, {{audience.jobid}}</span>, for <span class='highlighterDiv'>{{audience.name}}</span>. Bellow is a keyword summary stating the knowledge, attitudes, and tastes I bring to the UPS culture and job site setting.</p>",
-                    "body":"<p><b>Services</b></p><p><center><table><tr><td>keyword</td><td>keyword</td><td>keyword</td></tr><tr><td>keyword</td><td>keyword</td><td>keyword</td></tr><tr><td>keyword</td><td>keyword</td><td>keyword</td></tr></table></center></p>"
+                    "header":"<p align='center'><span class='highlighterDiv'>{{user.firstName}} {{user.middleName}} {{user.lastName}}<br>{{user.address}}, {{user.city}}, {{user.state}}, {{user.zip}}<br> {{user.phone}} {{user.email}}</span></p> <h3 align='center'>Resume</h3><hr> <p>I am applying to <span class='highlighterDiv'>{{audience.jobname}}</span>, {{audience.jobid}}</span>, for <span class='highlighterDiv'>{{audience.name}}</span>. Bellow is a keyword summary of my application profile.</p>",
+                    "body":"<p><b>Key Words</b></p><p><center><table><tr><td>Mechanic</td><td>Veteran (Honerable Discharge)</td><td>Drivers License </td></tr><tr><td>Secret Security Clearance (Expired)</td><td>U.S. Citizen</td><td>College Degree B.S.</td></tr><tr><td>No Allergies</td><td>No Fellonies</td><td>No Physical Limitations</td></tr></table></center></p><p>I am flexable in regards to my available work hours, and I am flexible regarding travel and remote employment.</p>"
                 },
                 "coverletterTemplateJSON": {
                     "header": "<p id='coverletterTime' class='w3-left-align'>{{today | date}}</p><p><span class='highlighterDiv'>{{audience.attn}}</span><br><span class='highlighterDiv'>{{audience.name}}</span><br><span class='highlighterDiv'>{{audience.zip}}</span></p><br>",
-                    "body": "<p>Dear <span class='highlighterDiv'>{{audience.attn}}</span>,</p> <p class='tab'>My name is <span class='highlighterDiv'>{{user.firstName}}</span> <span class='highlighterDiv'>{{user.middleName}}</span> <span class='highlighterDiv'>{{user.lastName}}</span>. I discovered <span class='highlighterDiv'>{{audience.situation}}</span>, at <span class='highlighterDiv'>{{audience.name}}</span>, and I want to contribute to your work. I consider myself skilled in <span class='highlighterDiv'>{{desirability.skillarray}}</span>. As a <span class='highlighterDiv'>{{desirability.applicationidentity}}</span>, <span class='highlighterDiv'>{{desirability.abilityarray}}</span>. I derive a personal satisfaction and pride when I fulfill the goals and expectations of <span class='highlighterDiv'>{{desirability.knowledgearray}}</span>. I am seeking to diversify my experience portfolio and further my way of life as a <span class='highlighterDiv'>{{desirability.applicationidentity}}</span>.</p><p class='tab'><span class='highlighterDiv'>{{audience.attn}}</span>, thank you for doing what you do, and thank you for taking the time to read how <span class='highlighterDiv'>{{audience.name}}</span> has inspired my own work.</p>",
+                    "body": "<p>Dear <span class='highlighterDiv'>{{audience.attn}}</span>,</p> <p class='tab'>My name is <span class='highlighterDiv'>{{user.firstName}}</span> <span class='highlighterDiv'>{{user.middleName}}</span> <span class='highlighterDiv'>{{user.lastName}}</span>. I learned about, <span class='highlighterDiv'>{{audience.name}}</span>, through <span class='highlighterDiv'>{{leads.leadtype}}</span>. <span class='highlighterDiv'>{{desirability.skillarray}}</span>. <span class='highlighterDiv'>{{desirability.abilityarray}}</span>. <span class='highlighterDiv'>{{desirability.knowledgearray}}</span>. I am seeking to diversify my experience portfolio and build professional relationships as a <span class='highlighterDiv'>{{desirability.applicationidentity}}</span>.</p><p class='tab'><span class='highlighterDiv'>{{audience.attn}}</span>, thank you for taking the time to consider my application. I hope to be of service to <span class='highlighterDiv'>{{audience.name}}</span>.</p>",
                     "footer": "<br><p>Sincerely,</p><br><br> <p><span class='highlighterDiv'>{{user.firstName}}</span> <span class='highlighterDiv'>{{user.middleName}}</span> <span class='highlighterDiv'>{{user.lastName}}</span><br><span class='highlighterDiv'>{{user.address}}</span>, <span class='highlighterDiv'>{{user.city}}</span>, <span class='highlighterDiv'>{{user.state}}</span>, <span class='highlighterDiv'>{{user.zip}}</span><br><span class='highlighterDiv'>{{user.email}}</span></p>"
                 }
             }
@@ -128,24 +128,25 @@ class JobsUpsSpider(scrapy.Spider):
             receiverTemplateJSON['situation'] = "openings listed on www.jobs-ups.com"
 
             # environment input data
-            environmentTemplateJSON['companydescriptioninputPrompt'] = "Simplify Post Description"
+            environmentTemplateJSON['companydescriptioninputPrompt'] = "You seek ..."
             environmentTemplateJSON['companydescription'] = sel.css('#anchor-overview > div > p::text').extract_first().strip()
-            environmentTemplateJSON['companyphilosophyinputPrompt'] = "Expecations"
+            environmentTemplateJSON['companyphilosophyinputPrompt'] = "Attutude towards duties"
             environmentTemplateJSON['companyphilosophy'] = environmentTemplateJSON['companydescription']
-            environmentTemplateJSON['companycustomersinputPrompt'] = "na"
-            environmentTemplateJSON['companycustomers'] = "na"
-            environmentTemplateJSON['companydistinguishinputPrompt'] = "na"
-            environmentTemplateJSON['companydistinguish'] = "na"
+
+            environmentTemplateJSON['companycustomersinputPrompt'] = "UPS Link: <a href='https://pressroom.ups.com/pressroom/ContentDetailsViewer.page?ConceptType=Speeches&id=1487961201475-136'>UPS Pressroom Abstract</a>"
+            environmentTemplateJSON['companycustomers'] = "According to the UPS Pressroom Abstract, your customers picked up more than 36 million packages at Access Point locations, and the numbers continue to grow. Your UPS Mobile Returns of the more than 4,500 UPS Stores is expanding Saturday Ground services"
+            environmentTemplateJSON['companydistinguishinputPrompt'] = "UPS Link: <a href='https://sustainability.ups.com/committed-to-more/'>committed-to-more</a>"
+            environmentTemplateJSON['companydistinguish'] = " "
 
             # relationship input data
-            relationshipTemplateJSON['applicationidentityinputPrompt'] = "na"
-            relationshipTemplateJSON['applicationidentity'] = "na"
-            relationshipTemplateJSON['skillarrayinputPrompt'] = "Scrape Skills"
+            relationshipTemplateJSON['applicationidentityinputPrompt'] = "Similar to Job Name"
+            relationshipTemplateJSON['applicationidentity'] = receiverTemplateJSON['jobname']
+            relationshipTemplateJSON['skillarrayinputPrompt'] = "My skills are, but not limited to ..."
             relationshipTemplateJSON['skillarray'] = environmentTemplateJSON['companydescription']
-            relationshipTemplateJSON['knowledgearrayinputPrompt'] = "na"
-            relationshipTemplateJSON['knowledgearray'] = "na"
-            relationshipTemplateJSON['abilityarrayinputPrompt'] = "Scrape Ability"
-            relationshipTemplateJSON['abilityarray'] = environmentTemplateJSON['companydescription']
+            relationshipTemplateJSON['knowledgearrayinputPrompt'] = "General Learning Refference"
+            relationshipTemplateJSON['knowledgearray'] = "I received mechanics training though the Coast Guard and general literacy, logic, and reason though college."
+            relationshipTemplateJSON['abilityarrayinputPrompt'] = "Abilities relevant to this post"
+            relationshipTemplateJSON['abilityarray'] =  environmentTemplateJSON['companydescription']
 
             for sel1 in response.xpath('//*[@id="description"]'):
                 # reciever input data
@@ -159,7 +160,7 @@ class JobsUpsSpider(scrapy.Spider):
                 receiverTemplateJSON['name'] = "USP %s Store id: %s"%(tempCity, storeID)
 
                 # environment input data
-                environmentTemplateJSON['companydescriptioninputPrompt'] = "Department Fullfilments"
-                environmentTemplateJSON['companydescription'] = sel.css('#description > div.ats-description::text').extract_first().strip()
+                #environmentTemplateJSON['companydescriptioninputPrompt'] = "Department Fullfilments"
+                #environmentTemplateJSON['companydescription'] = sel.css('#description > div.ats-description::text').extract_first().strip()
 
                 yield scrapy.Request(tempUrl, self.parse_MapAddressPage, meta={'senderTemplateJSON':senderTemplateJSON, 'receiverTemplateJSON':receiverTemplateJSON, 'environmentTemplateJSON':environmentTemplateJSON, 'relationshipTemplateJSON':relationshipTemplateJSON})
