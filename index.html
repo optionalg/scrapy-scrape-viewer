@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <link rel="icon" type="image/png" href="img/favicon-16x16.png" sizes="16x16" />
     <link href="bootstrap-3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -14,8 +14,8 @@
 </head>
 
 <body ng-controller="JobsController as jobs">
+    <div id="btnPower"><a href="../html-projects-menu/index.html"><i class='fa fa-step-backward fa-2x'> </i></a> <a href="#" onclick="window.close();"> <i class='fa fa-power-off fa-2x'></i></a></div>
     <div class="container-fluid">
-
         <div class="row">
             <div class="col-xs-8 col-xs-offset-2">
                 <div class="mytitle">
@@ -40,7 +40,7 @@
                             <input id="include" type="text" class="form-control" ng-model="jobs.include" aria-describedby="include-addon" />
                         </div>
                         <ul class="subHeading">
-                            <li>UPS uses full state (ex:Alabama)</li>
+                            <li>UPS: full state</li>
                         </ul>
                     </div>
                     <div class="col-xs-6">
