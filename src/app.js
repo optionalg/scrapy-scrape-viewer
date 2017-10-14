@@ -2,16 +2,14 @@
 (function() {
     'use strict';
 
-
     angular.module('jobListings', [])
         .controller('JobsController', JobsController)
         .directive('jobsSource', jobsSource)
+        .directive('terminalClipboard', terminalClipboard)
         .filter('excludeFilter', excludeFilter)
         .service('DataService', DataService);
 
     JobsController.$inject = ['$scope', 'DataService'];
-
-
 
     function JobsController($scope, DataService) {
 
@@ -51,13 +49,47 @@
 
             document.body.appendChild(downloadLink);
             downloadLink.click();
-        }
+        };
+
+        $scope.loadterminalScript = function(inputID) {
+            var clipboard, terminalGetRepo, terminalLinuxSetup;
+            console.log("inputID", inputID);
+
+            if(inputID === "clipboard0"){
+                $('#'+inputID).val("cd; cd github/scrapy-scrape-viewer/scrapyvirtualenv/jobsups; source upsjobsDemoShell.sh");
+            }
+            if(inputID === "clipboard1"){
+                $('#'+inputID).val("cd; cd github/scrapy-scrape-viewer/scrapyvirtualenv/stackoverflow");
+                //scrapyvirtualenv/expresspros/expressprosDemoShell.sh
+            }
+            if(inputID === "clipboard2"){
+                $('#'+inputID).val("cd; cd github/scrapy-scrape-viewer/scrapyvirtualenv/expresspros");
+            }
+            if(inputID === "clipboard3"){
+                $('#'+inputID).val("cd; cd github/scrapy-scrape-viewer/scrapyvirtualenv/targetedjobfairs");
+            }
+
+            clipboard = new Clipboard('.clipboardJS');
+            clipboard.on('success', function(e) {
+                console.log(e);
+            });
+            clipboard.on('error', function(e) {
+                console.log(e);
+            });
+        };
     }
 
     function jobsSource() {
         return {
             restrict: 'E',
             templateUrl: 'src/jobs-source.directive.html'
+        };
+    }
+
+    function terminalClipboard() {
+        return {
+            restrict: 'E',
+            templateUrl: 'src/terminal-clipboard.directive.html'
         };
     }
 

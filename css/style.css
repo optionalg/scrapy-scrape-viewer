@@ -5,6 +5,11 @@
     padding: 10px;
 }
 
+a{color:green;} a:hover{color:white; background-color: #48aa15; border-radius:5px; padding:2px;}
+span a {
+    cursor: pointer;
+}
+
 .fa {
     font-size: 1.4rem;
 }

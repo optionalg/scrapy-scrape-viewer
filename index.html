@@ -26,7 +26,11 @@
                             Use this as a way to view and filter through <code>-o .json</code> scrape results in <a href="https://stackoverflow.com/a/27743373" target="_blabk" data-toggle="tooltip" title="On Chrome: Add ''--allow-file-access-from-files'' after Chrome's shortcut target, or run page via localhost server.">Firefox</a>.
                         </p>
                         <p>
-                            <p>Crawl: <code>source /home/mezcel/github/scrapy-scrape-viewer/scrapy-scrape-viewer.sh</code>
+                            <p>
+                                Crawl: <code>source /home/mezcel/github/scrapy-scrape-viewer/scrapy-scrape-viewer.sh</code>
+                            <p>
+                                <terminal-clipboard ng-repeat="source in jobs.sources"></terminal-clipboard>
+                            </p>
                         </p>
                     </div>
                 </div>
@@ -63,6 +67,7 @@
     <script src="src/jquery-3.1.1.min.js"></script>
     <script src="bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
     <script src="lib/angular.min.js"></script>
+    <script src="clipboard.js-master/dist/clipboard.min.js"></script>
     <script src="src/app.js"></script>
 
 </body>
