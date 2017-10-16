@@ -8,6 +8,7 @@
 
 > The html was initially Semi-Cloned From: [kimberlythegeek/stackoverflow-denver_spider.py](https://github.com/kimberlythegeek/scrapy-project/blob/master/tutorial/spiders/stackoverflow-denver_spider.py)
 
+* virtualenv between different computers tests
 * this version is focused on modifying the jobsups spider for the document-writer template json input
 * i discovered "after the fact" scraping the site's js would have cut down a lot of processed. I will go back and do that.
 
