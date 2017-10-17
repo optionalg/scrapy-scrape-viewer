@@ -59,11 +59,11 @@
                 $('#'+inputID).val("cd; cd github/scrapy-scrape-viewer/scrapyvirtualenv/jobsups; source upsjobsDemoShell.sh");
             }
             if(inputID === "clipboard1"){
-                $('#'+inputID).val("cd; cd github/scrapy-scrape-viewer/scrapyvirtualenv/stackoverflow");
+                $('#'+inputID).val("cd; cd github/scrapy-scrape-viewer/scrapyvirtualenv/stackoverflow; source stackoverflowDemoShell.sh");
                 //scrapyvirtualenv/expresspros/expressprosDemoShell.sh
             }
             if(inputID === "clipboard2"){
-                $('#'+inputID).val("cd; cd github/scrapy-scrape-viewer/scrapyvirtualenv/expresspros");
+                $('#'+inputID).val("cd; cd github/scrapy-scrape-viewer/scrapyvirtualenv/expresspros; source expressprosDemoShell.sh");
             }
             if(inputID === "clipboard3"){
                 $('#'+inputID).val("cd; cd github/scrapy-scrape-viewer/scrapyvirtualenv/targetedjobfairs");
