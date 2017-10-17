@@ -2,18 +2,24 @@
 
 ## Virtual Environment for my Scrapy
 
-I will scrap different site with different site layouts and different retrieval requirements
+The virtualenv needs to be made from scratch on each Linux. This work on my machine though.
 
-I want to generate "something" within the following output variable
 
-'job'
-'title'
-'url'
-'url2'
-'company'
-'location'
-'date'
-'skills'
-'email'
-'phone'
-'participants'
+##### Migrate virtual env between computers
+Guidance / Clue:
+[https://stackoverflow.com/questions/34993200/copy-complete-virtualenv-to-another-pc](https://stackoverflow.com/a/34993306)
+
+Do following steps on source machine
+```
+cd '[path]/[virtualenv-directory]'
+source bin/activate
+pip freeze > requirements.txt
+```
+
+On other PC
+```
+# create a virtual environment using mkvirtualenv [environment_name]
+cd '[path]/[virtualenv-directory]'
+source bin/activate
+pip install -r requirements.txt
+```
