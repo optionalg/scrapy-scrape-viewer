@@ -1,7 +1,4 @@
-
 <span>
-    <a data-clipboard-action="copy" data-clipboard-target="#clipboard{{source.id}}" title="Linux Terminal: Copy {{source.name}} Crawler" class="clipboardJS" ng-click="loadterminalScript('clipboard'+source.id);">
-    <i class="glyphicon glyphicon-copy clipboardJS"></i> {{source.name}}
-    </a>
+    <a data-clipboard-action="copy" data-clipboard-target="#clipboard{{source.id}}" title="Linux Terminal: Copy {{source.name}} Crawler" class="clipboardJS" ng-click="loadterminalScript('clipboard'+source.id);"><i class="glyphicon glyphicon-copy clipboardJS"></i>{{source.name}}</a>
 </span>&nbsp;&nbsp;
 <input id="clipboard{{source.id}}" title="camouflage clipboard placeholder in order to use clipboard.js" style="position: absolute; top:0; left:0; color:white; background-color:white; width:0px; height:0px; overflow: hidden; border:none;"></input><!-- overflow: hidden; -->
