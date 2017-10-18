@@ -6,5 +6,6 @@ source bin/activate
 ls
 cd stackoverflow
 scrapy crawl stackoverflow -a domain='https://stackoverflow.com/jobs?sort=p&l=Florida,https://stackoverflow.com/jobs?sort=p&l=Georgia,https://stackoverflow.com/jobs?sort=p&l=Alabama' -o ../../stackoverflow_Demo.json
+# scrapy crawl stackoverflow -a domain='https://stackoverflow.com/jobs?sort=p&l=Florida' -o ../../stackoverflow_Demo.json
 # deactivate virtualenv scrapyvirtualenv
 deactivate

@@ -11,6 +11,7 @@ import scrapy
 class StackoverflowItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
+    date  = scrapy.Field()
 
     loopCounter = scrapy.Field()
     firstName = scrapy.Field()
