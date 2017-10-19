@@ -69,6 +69,7 @@ class StackOverflowSpider(scrapy.Spider):
         emailletterTemplateJSON = StackoverflowItem()
 
         positionName = response.css('.title::text').extract_first()
+        positionNameLink = response.css('.title::attr(href)').extract_first()
         employer = response.css('a.employer::text').extract_first()
         employerLink = response.css('a.employer::attr(href)').extract_first()
         employerLink = "https://stackoverflow.com" + employerLink
@@ -76,7 +77,7 @@ class StackOverflowSpider(scrapy.Spider):
         receiverTemplateJSON['jobname'] = positionName
         receiverTemplateJSON['name'] = employer
         emailletterTemplateJSON['lead'] = "Stackoverflow Jobs"
-        emailletterTemplateJSON['research'] = receiverTemplateJSON['website']
+        emailletterTemplateJSON['research'] = positionNameLink
         receiverTemplateJSON['website'] = employerLink
 
         for result2 in response.css('.-about-job'):
