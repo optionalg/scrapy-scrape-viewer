@@ -1,13 +1,13 @@
 # scrapy-scrape-viewer
 
-### Viewer For My Scrapes
+## Viewer For My Scrapes
 
-#### atom.io tools
-* [pretty-json](https://atom.io/packages/pretty-json)
+### Dependencies:
 
-* migrating virtualenv between different computers has issue
+Virtualenv and Scrapy
+[Readme regarding dependencies](forscrapyclones.md)
 
+> This Repo branch incorporates A dedicated virtual environment which runs Scrapy crawlers.
 
-#### Refer to my older [GIT-REPO-Branch](https://github.com/mezcel/googlemaps-api-helloworld/tree/expanded-idea-8-stackoverflow) to generate the .json this AngularJS App will use.
-
-> * <i> I used a more efficient scrape technique than the one used in my the Google API Repo </i>
+### For first time clones, run this script after it is downloaded to it default git
+[Post Clone Configuration](runThisShellAfterClone.sh)
