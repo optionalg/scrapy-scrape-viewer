@@ -16,170 +16,173 @@ class StackOverflowSpider(scrapy.Spider):
         self.start_urls = domain
 
     def parse(self, response):
-        receiverTemplateJSON = StackoverflowItem()
-        relationshipTemplateJSON = StackoverflowItem()
-        item = StackoverflowItem()
-
-        mycounter = 0
         for result in response.css('div.main div.-job-summary'):
-            receiverTemplateJSON['jobnameinputPrompt'] = "Position:"
-            receiverTemplateJSON['jobname'] = result.css('a.job-link::text').extract_first()
-            receiverTemplateJSON['jobidinputPrompt'] = "Job Type:"
-            receiverTemplateJSON['jobid'] = result.css('a.job-link::attr(title)').extract_first()
-            receiverTemplateJSON['hours'] = "1"
-            receiverTemplateJSON['name'] = result.css('a.job-link::attr(title)').extract_first()
-            receiverTemplateJSON['address'] =  "meznull"
-
-            citystate = result.css('div.-location::text').extract_first().replace('- \r\n', '').strip()
-            if citystate:
-                citystate = citystate.split(', ')
-                if citystate:
-                    receiverTemplateJSON['city'] = citystate[0]
-                    if citystate[1]:
-                        receiverTemplateJSON['state'] = citystate[1]
-                    else:
-                        receiverTemplateJSON['state'] = "meznull"
-
-            receiverTemplateJSON['zip'] =  "meznull"
-
             nextlistlink = result.css('a.job-link::attr(href)').extract_first()
-            receiverTemplateJSON['website'] = nextlistlink
-            receiverTemplateJSON['attn'] = "meznull"
-            receiverTemplateJSON['attnemail'] = "meznull"
-            receiverTemplateJSON['phone'] = "meznull"
-            receiverTemplateJSON['situation'] = "Stack Overflow Jobs"
-
-            relationshipTemplateJSON['skillarray'] = result.css('p > a.post-tag.job-link.no-tag-menu::text').extract()
-
-            item['date'] = result.css('p.-posted-date.g-col::text').extract_first().strip()
-            item['website'] = receiverTemplateJSON['website']
-
-            yield response.follow(nextlistlink, self.parse_jobpost, meta={'receiverTemplateJSON':receiverTemplateJSON, 'relationshipTemplateJSON':relationshipTemplateJSON, 'item':item })
-
-        '''next_page = response.css('div.pagination > a.job-link::attr(href)').extract()
-        mycounter = mycounter + 1
-        yield scrapy.Request(response.urljoin(next_page[mycounter]), self.parse)'''
-
+            yield response.follow(nextlistlink, self.parse_jobpost)
 
     def parse_jobpost(self, response):
-        receiverTemplateJSON = response.meta['receiverTemplateJSON']
-        relationshipTemplateJSON = response.meta['relationshipTemplateJSON']
-        item = response.meta['item']
+        parse_jobpost_receiverTemplateJSON = StackoverflowItem()
+        parse_jobpost_environmentTemplateJSON = StackoverflowItem()
+        parse_jobpost_relationshipTemplateJSON = StackoverflowItem()
+        parse_jobpost_emailletterTemplateJSON = StackoverflowItem()
+
+        for jobdetaildescription in response.css('#job-detail > div.job-detail-header > div > div.-description'):
+            title = jobdetaildescription.css('div:nth-child(1) > h1 > a::text').extract_first()
+            # title link is = response.request.url
+            employer = jobdetaildescription.css('div.-company.g-row > div.-name > a::text').extract_first()
+            employerLink = "https://stackoverflow.com" + response.css('a.employer::attr(href)').extract_first()
+            location = jobdetaildescription.css('div.-company.g-row > div.-location::text').extract_first()
+
+        for aboutthisjob in response.css('.-about-job'):
+            jobtype = aboutthisjob.css('.-about-job-items > div:nth-child(1) > div:nth-child(1) > span:nth-child(2)::text').extract_first()
+            experiencelevel = aboutthisjob.css('.-about-job-items > div:nth-child(1) > div:nth-child(2) > span:nth-child(2)::text').extract_first()
+
+        for jobdescription in response.css('.-job-description'):
+            description = jobdescription.css('.-job-description > div.description').extract_first()
+
+        mailtolink = response.css('#action-bar > div.g-row.-share-report > div:nth-child(1) > a::attr(href)').extract_first()
+
+        # ### receiverTemplateJSON ##################################
+        parse_jobpost_receiverTemplateJSON['jobname'] = title
+        parse_jobpost_receiverTemplateJSON['name'] = employer
+        parse_jobpost_receiverTemplateJSON['jobid'] = experiencelevel
+        parse_jobpost_receiverTemplateJSON['hours'] = jobtype
+        parse_jobpost_receiverTemplateJSON['attnemail'] = "https://stackoverflow.com" + mailtolink
+        parse_jobpost_receiverTemplateJSON['state'] = location
+
+        # ### environmentTemplateJSON ##################################
+        parse_jobpost_environmentTemplateJSON['companydescriptioninputPrompt'] = "<a href='" + response.request.url + "' target='_blank'>Link: Stackoverflow Job Detail</a>"
+        parse_jobpost_environmentTemplateJSON['companydescription'] = description
+
+        # ### relationshipTemplateJSO ##################################
+        parse_jobpost_relationshipTemplateJSON['applicationidentityinputPrompt'] = ""
+        parse_jobpost_relationshipTemplateJSON['applicationidentity'] = title
+        parse_jobpost_relationshipTemplateJSON['abilityarrayinputPrompt'] = ""
+        parse_jobpost_relationshipTemplateJSON['abilityarray'] = experiencelevel
+
+        # ### emailletterTemplateJSON ##################################
+        parse_jobpost_emailletterTemplateJSON['research'] = response.request.url
+
+
+        yield response.follow(employerLink, self.parse_googleApiPage, meta={'parse_jobpost_receiverTemplateJSON':parse_jobpost_receiverTemplateJSON, 'parse_jobpost_environmentTemplateJSON':parse_jobpost_environmentTemplateJSON, 'parse_jobpost_relationshipTemplateJSON':parse_jobpost_relationshipTemplateJSON, 'parse_jobpost_emailletterTemplateJSON':parse_jobpost_emailletterTemplateJSON})
+
+    def parse_googleApiPage(self, response):
+        parse_jobpost_receiverTemplateJSON = response.meta['parse_jobpost_receiverTemplateJSON']
+        parse_jobpost_environmentTemplateJSON = response.meta['parse_jobpost_environmentTemplateJSON']
+        parse_jobpost_relationshipTemplateJSON = response.meta['parse_jobpost_relationshipTemplateJSON']
+        parse_jobpost_emailletterTemplateJSON = response.meta['parse_jobpost_emailletterTemplateJSON']
+
+        items = StackoverflowItem()
+        receiverTemplateJSON = StackoverflowItem()
+        relationshipTemplateJSON = StackoverflowItem()
         environmentTemplateJSON = StackoverflowItem()
         emailletterTemplateJSON = StackoverflowItem()
 
-        positionName = response.css('.title::text').extract_first()
-        # job desc link
-        # positionNameLink
-        # emailletterTemplateJSON['research']
-        positionNameLink = response.css('.title::attr(href)').extract_first()
+        # #################################### #
 
-        employer = response.css('a.employer::text').extract_first()
-        #philosophy link
-        # employerLink
-        # receiverTemplateJSON['website']
-        employerLink = response.css('a.employer::attr(href)').extract_first()
-        employerLink = "https://stackoverflow.com" + employerLink
-
-        receiverTemplateJSON['jobname'] = positionName
-        receiverTemplateJSON['name'] = employer
-        emailletterTemplateJSON['lead'] = "Stackoverflow Jobs"
-        emailletterTemplateJSON['research'] = positionNameLink
-        # receiverTemplateJSON['website'] = employerLink
-
-        for result2 in response.css('.-about-job'):
-            jobtype = result2.css('.-about-job-items > div:nth-child(1) > div:nth-child(1) > span:nth-child(2)::text').extract_first()
-            experiencelevel = result2.css('.-about-job-items > div:nth-child(1) > div:nth-child(2) > span:nth-child(2)::text').extract_first()
-            role = result2.css('.-about-job-items > div:nth-child(1) > div:nth-child(3) > span:nth-child(2)::text').extract_first()
-            industry = result2.css('div.g-column:nth-child(2) > div:nth-child(1) > span:nth-child(2)::text').extract_first()
-            companysize = result2.css('div.g-column:nth-child(2) > div:nth-child(2) > span:nth-child(2)::text').extract_first()
-            companytype = result2.css('div.g-column:nth-child(2) > div:nth-child(3) > span:nth-child(2)::text').extract_first()
-
-        receiverTemplateJSON['jobid'] = experiencelevel
-        receiverTemplateJSON['hours'] = jobtype
-
-        for result3 in response.css('.-technologies'):
-            technology = result3.css('div.-tags:nth-child(2) > p:nth-child(1) > a::text').extract()
-
-        if technology:
-            technology = ", ".join(technology)
-
-        for result4 in response.css('.-job-description'):
-            description = result4.css('.-job-description > div.description').extract_first().replace('\r\n', '').strip()
-            description = description.replace('<div class="description">', '').strip()
-            description = description.replace('</div>', '').strip()
-
-        # environmentTemplateJSON['companydescriptioninputPrompt'] = "<a href='" + emailletterTemplateJSON['research'] + "' target='_blank'>Link: Stackoverflow Job Detail</a>"
-        environmentTemplateJSON['companydescriptioninputPrompt'] = "<a href='" + emailletterTemplateJSON['research'] + "' target='_blank'>Link: Stackoverflow Job Detail</a>"
-        environmentTemplateJSON['companydescription'] = description
-        environmentTemplateJSON['companyphilosophyinputPrompt'] = "<a href='" + employerLink + "' target='_blank'>Link: Stackoverflow Company</a>"
-        environmentTemplateJSON['companyphilosophy'] = description
-        environmentTemplateJSON['companycustomersinputPrompt'] = "Your customers are ..."
-        environmentTemplateJSON['companycustomers'] = "Your target industry customers are: " + companytype + ", "+ industry
-        environmentTemplateJSON['companydistinguishinputPrompt'] = "Something unique to this company..."
-        environmentTemplateJSON['companydistinguish'] = companysize
-
-        relationshipTemplateJSON['applicationidentityinputPrompt'] = ""
-        relationshipTemplateJSON['applicationidentity'] = role
-        relationshipTemplateJSON['skillarrayinputPrompt'] = ""
-        relationshipTemplateJSON['skillarray'] = technology
-        relationshipTemplateJSON['knowledgearrayinputPrompt'] = ""
-        relationshipTemplateJSON['knowledgearray'] = technology
-        relationshipTemplateJSON['abilityarrayinputPrompt'] = ""
-        relationshipTemplateJSON['abilityarray'] = technology
-
-        emailletterTemplateJSON['lead'] = "Stack Overflow Jobs"
-        # emailletterTemplateJSON['research'] = receiverTemplateJSON['website']
-
-        yield response.follow(employerLink, self.parse_googleApiPage, meta={'receiverTemplateJSON':receiverTemplateJSON, 'relationshipTemplateJSON':relationshipTemplateJSON, 'item':item, 'environmentTemplateJSON':environmentTemplateJSON, 'emailletterTemplateJSON':emailletterTemplateJSON })
-
-
-    def parse_googleApiPage(self, response):
-        receiverTemplateJSON = response.meta['receiverTemplateJSON']
-        relationshipTemplateJSON = response.meta['relationshipTemplateJSON']
-        environmentTemplateJSON = response.meta['environmentTemplateJSON']
-        emailletterTemplateJSON = response.meta['emailletterTemplateJSON']
-        item = response.meta['item']
-
+        industry = response.css('#company-profile > div:nth-child(2) > ul > li:nth-child(3) > span::text').extract_first()
+        companysize = response.css('#company-profile > div:nth-child(2) > ul > li:nth-child(2) > span::text').extract_first()
+        companytype = response.css('#company-profile > div:nth-child(2) > ul > li:nth-child(1) > span::text').extract_first()
         companyname = response.css('.title-and-badge > h1:nth-child(1)::text').extract_first()
-        if companyname:
-            receiverTemplateJSON['name'] = companyname
-
         companyphil = response.css('.first-company-statement').extract()
-        if companyphil:
-            environmentTemplateJSON['companyphilosophy'] = companyphil
-
+        if not companyphil:
+            companyphil = "no extra data on Stackoverflow"
         companyhomepage = response.css('#company-profile > div:nth-child(2) > div.right > div:nth-child(1) > a:nth-child(1)::attr(href)').extract_first()
-        if companyhomepage:
-            receiverTemplateJSON['website'] = companyhomepage
-        else:
-            receiverTemplateJSON['website'] = "mismatch catch"
 
-        finaladdress = response.xpath('//*[@id="company-profile"]/div[8]/div[1]/div[1]/text()').extract_first()
-        if finaladdress:
-            receiverTemplateJSON['address'] = finaladdress
-            receiverTemplateJSON['city'] = finaladdress
-            receiverTemplateJSON['state'] = finaladdress
-            receiverTemplateJSON['zip'] = finaladdress
+        for techenvironment in response.css('div.tags'):
+            skills = techenvironment.css('a::text').extract()
+
+        skills = ", ".join(skills)
+
+        finaladdress = ""
+
+        if not response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[1]').extract_first():
+            finaladdress = parse_jobpost_receiverTemplateJSON['state']
+
+
+        if response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[1]').extract_first():
+            finaladdress1 = response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[1]').extract_first()
+
+            if (finaladdress1 == "USA"):
+                finaladdress = parse_jobpost_receiverTemplateJSON['state']
+
+            if response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[2]').extract_first():
+                finaladdress2 = response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[2]').extract_first()
+                finaladdress = finaladdress1 + " " + finaladdress2
+
+                if response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[3]').extract_first():
+                    finaladdress3 = response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[3]').extract_first()
+                    finaladdress = finaladdress1 + " " + finaladdress2 + " " + finaladdress3
+                    
 
         self.count = self.count + 1
 
-        # <td class="col-xs-2">{{ result.date }}
-        # <a ng-href="{{ result.url }}" target="_blank">{{ result.title }}</a>
-        # <td class="col-xs-4">{{ result.company }}</td>
-        yield {
-            'id': self.count,
-            'job': receiverTemplateJSON['jobname'],
-            'title': receiverTemplateJSON['jobname'] + ", " + receiverTemplateJSON['jobid'],
-            'url': emailletterTemplateJSON['research'],
-            'company': receiverTemplateJSON['name'] + ", "+ receiverTemplateJSON['state'],
-            'location': receiverTemplateJSON['city'] + ", "+ receiverTemplateJSON['state'],
-            'date': item['date'],
-            'skills': relationshipTemplateJSON['skillarray'],
+        # ### items #################################### #
+        items['id'] = self.count
+        items['job'] = companyname
+        items['title'] = parse_jobpost_receiverTemplateJSON['jobname']
+        items['url'] = parse_jobpost_emailletterTemplateJSON['research']
+        items['company'] = companyname + " " + finaladdress
+        items['location'] = finaladdress
+        items['date'] = "date placeholder"
+        items['skills'] = skills
 
-            'receiverTemplateJSON': receiverTemplateJSON,
-            'relationshipTemplateJSON': relationshipTemplateJSON,
-            'environmentTemplateJSON': environmentTemplateJSON,
+        # ### receiverTemplateJSON ################################# #
+        receiverTemplateJSON['jobnameinputPrompt'] = "Position:"
+        receiverTemplateJSON['jobname'] = parse_jobpost_receiverTemplateJSON['jobname']
+        receiverTemplateJSON['jobidinputPrompt'] = "Job Type:"
+        receiverTemplateJSON['jobid'] = parse_jobpost_receiverTemplateJSON['jobid']
+        receiverTemplateJSON['hours'] = parse_jobpost_receiverTemplateJSON['hours']
+        receiverTemplateJSON['name'] = parse_jobpost_receiverTemplateJSON['name']
+        receiverTemplateJSON['address'] = finaladdress
+        receiverTemplateJSON['city'] = finaladdress
+        receiverTemplateJSON['state'] = finaladdress
+        receiverTemplateJSON['zip'] = finaladdress
+        receiverTemplateJSON['website'] = companyhomepage
+        receiverTemplateJSON['attn'] = "meznull"
+        receiverTemplateJSON['attnemail'] = parse_jobpost_receiverTemplateJSON['attnemail']
+        receiverTemplateJSON['phone'] = "meznull"
+        receiverTemplateJSON['situation'] = "Stackoverflow Jobs"
+
+        # ### relationshipTemplateJSON ################################# #
+        relationshipTemplateJSON['applicationidentityinputPrompt'] = "applicationidentityinputPrompt"
+        relationshipTemplateJSON['applicationidentity'] = parse_jobpost_relationshipTemplateJSON['applicationidentity']
+        relationshipTemplateJSON['skillarrayinputPrompt'] = "skillarrayinputPrompt"
+        relationshipTemplateJSON['skillarray'] = skills
+        relationshipTemplateJSON['knowledgearrayinputPrompt'] = "knowledgearrayinputPrompt"
+        relationshipTemplateJSON['knowledgearray'] = skills
+        relationshipTemplateJSON['abilityarrayinputPrompt'] = "abilityarrayinputPrompt"
+        relationshipTemplateJSON['abilityarray'] = parse_jobpost_relationshipTemplateJSON['abilityarray']
+
+        # ### environmentTemplateJSON ################################# #
+        environmentTemplateJSON['companydescriptioninputPrompt'] = "<a href='" + parse_jobpost_emailletterTemplateJSON['research'] + "' target='_blank'>Link: Stackoverflow Job Detail</a>"
+        environmentTemplateJSON['companydescription'] = parse_jobpost_environmentTemplateJSON['companydescription']
+        environmentTemplateJSON['companyphilosophyinputPrompt'] = "<a href='" + response.request.url + "' target='_blank'>Link: Stackoverflow Company</a>"
+        environmentTemplateJSON['companyphilosophy'] = companyphil
+        environmentTemplateJSON['companycustomersinputPrompt'] = "Your customers are ..."
+        environmentTemplateJSON['companycustomers'] = "Your target industry customers are: " + companytype + ", " + industry
+        environmentTemplateJSON['companydistinguishinputPrompt'] = "Something unique to this company..."
+        environmentTemplateJSON['companydistinguish'] = companysize
+
+        # ### emailletterTemplateJSON ################################# #
+        emailletterTemplateJSON['lead'] = "Scrape Stackoverflow Jobs"
+        emailletterTemplateJSON['research'] = parse_jobpost_emailletterTemplateJSON['research']
+
+
+
+        yield {
+            'id': items['id'],
+            'job': items['job'],
+            'title': items['title'],
+            'url': items['url'],
+            'company': items['company'],
+            'location': items['location'],
+            'date': items['date'],
+            'skills': items['skills'],
+
+            "receiverTemplateJSON": receiverTemplateJSON,
+            "relationshipTemplateJSON": relationshipTemplateJSON,
+            "environmentTemplateJSON": environmentTemplateJSON,
             "emailletterTemplateJSON": {
                 "lead": emailletterTemplateJSON['lead'],
                 "research": emailletterTemplateJSON['research'],
