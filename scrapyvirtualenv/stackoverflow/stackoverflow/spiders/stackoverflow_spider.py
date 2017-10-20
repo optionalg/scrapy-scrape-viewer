@@ -69,8 +69,15 @@ class StackOverflowSpider(scrapy.Spider):
         emailletterTemplateJSON = StackoverflowItem()
 
         positionName = response.css('.title::text').extract_first()
+        # job desc link
+        # positionNameLink
+        # emailletterTemplateJSON['research']
         positionNameLink = response.css('.title::attr(href)').extract_first()
+
         employer = response.css('a.employer::text').extract_first()
+        #philosophy link
+        # employerLink
+        # receiverTemplateJSON['website']
         employerLink = response.css('a.employer::attr(href)').extract_first()
         employerLink = "https://stackoverflow.com" + employerLink
 
@@ -78,7 +85,7 @@ class StackOverflowSpider(scrapy.Spider):
         receiverTemplateJSON['name'] = employer
         emailletterTemplateJSON['lead'] = "Stackoverflow Jobs"
         emailletterTemplateJSON['research'] = positionNameLink
-        receiverTemplateJSON['website'] = employerLink
+        # receiverTemplateJSON['website'] = employerLink
 
         for result2 in response.css('.-about-job'):
             jobtype = result2.css('.-about-job-items > div:nth-child(1) > div:nth-child(1) > span:nth-child(2)::text').extract_first()
@@ -102,9 +109,10 @@ class StackOverflowSpider(scrapy.Spider):
             description = description.replace('<div class="description">', '').strip()
             description = description.replace('</div>', '').strip()
 
-        environmentTemplateJSON['companydescriptioninputPrompt'] = "<a href='" + emailletterTemplateJSON['research'] + "' target='_blank'>Link: Stackoverflow Companies</a>"
+        # environmentTemplateJSON['companydescriptioninputPrompt'] = "<a href='" + emailletterTemplateJSON['research'] + "' target='_blank'>Link: Stackoverflow Job Detail</a>"
+        environmentTemplateJSON['companydescriptioninputPrompt'] = "<a href='" + emailletterTemplateJSON['research'] + "' target='_blank'>Link: Stackoverflow Job Detail</a>"
         environmentTemplateJSON['companydescription'] = description
-        environmentTemplateJSON['companyphilosophyinputPrompt'] = "<a href='" + employerLink + "' target='_blank'>Link: Stackoverflow Companies</a>"
+        environmentTemplateJSON['companyphilosophyinputPrompt'] = "<a href='" + employerLink + "' target='_blank'>Link: Stackoverflow Company</a>"
         environmentTemplateJSON['companyphilosophy'] = description
         environmentTemplateJSON['companycustomersinputPrompt'] = "Your customers are ..."
         environmentTemplateJSON['companycustomers'] = "Your target industry customers are: " + companytype + ", "+ industry
@@ -121,7 +129,7 @@ class StackOverflowSpider(scrapy.Spider):
         relationshipTemplateJSON['abilityarray'] = technology
 
         emailletterTemplateJSON['lead'] = "Stack Overflow Jobs"
-        emailletterTemplateJSON['research'] = receiverTemplateJSON['website']
+        # emailletterTemplateJSON['research'] = receiverTemplateJSON['website']
 
         yield response.follow(employerLink, self.parse_googleApiPage, meta={'receiverTemplateJSON':receiverTemplateJSON, 'relationshipTemplateJSON':relationshipTemplateJSON, 'item':item, 'environmentTemplateJSON':environmentTemplateJSON, 'emailletterTemplateJSON':emailletterTemplateJSON })
 
@@ -144,6 +152,8 @@ class StackOverflowSpider(scrapy.Spider):
         companyhomepage = response.css('#company-profile > div:nth-child(2) > div.right > div:nth-child(1) > a:nth-child(1)::attr(href)').extract_first()
         if companyhomepage:
             receiverTemplateJSON['website'] = companyhomepage
+        else:
+            receiverTemplateJSON['website'] = "mismatch catch"
 
         finaladdress = response.xpath('//*[@id="company-profile"]/div[8]/div[1]/div[1]/text()').extract_first()
         if finaladdress:
