@@ -10,4 +10,4 @@ Virtualenv and Scrapy
 > This Repo branch incorporates A dedicated virtual environment which runs Scrapy crawlers.
 
 ### For first time clones, run this script after it is downloaded to it default git
-[Post Clone Configuration](runThisShellAfterClone.sh)
+[Post Clone Configuration](resetScrapyViewerVirtualenv.sh)
