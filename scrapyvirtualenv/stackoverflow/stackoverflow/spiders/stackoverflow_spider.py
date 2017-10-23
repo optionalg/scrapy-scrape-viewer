@@ -1,4 +1,5 @@
 import scrapy
+import re
 
 from stackoverflow.items import StackoverflowItem
 
@@ -102,6 +103,7 @@ class StackOverflowSpider(scrapy.Spider):
 
         if response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[1]').extract_first():
             finaladdress1 = response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[1]').extract_first()
+            finaladdress = finaladdress1
 
             if (finaladdress1 == "USA"):
                 finaladdress = parse_jobpost_receiverTemplateJSON['state']
@@ -113,6 +115,10 @@ class StackOverflowSpider(scrapy.Spider):
                 if response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[3]').extract_first():
                     finaladdress3 = response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[3]').extract_first()
                     finaladdress = finaladdress1 + " " + finaladdress2 + " " + finaladdress3
+
+
+        if finaladdress:
+            finaladdress = re.sub('\s+',' ',finaladdress)
 
 
         self.count = self.count + 1
