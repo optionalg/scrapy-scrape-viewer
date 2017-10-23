@@ -103,7 +103,7 @@ class StackOverflowSpider(scrapy.Spider):
 
         if response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[1]').extract_first():
             finaladdress1 = response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[1]').extract_first()
-            finaladdress = finaladdress1
+            #finaladdress = finaladdress1
 
             if (finaladdress1 == "USA"):
                 finaladdress = parse_jobpost_receiverTemplateJSON['state']
@@ -116,9 +116,13 @@ class StackOverflowSpider(scrapy.Spider):
                     finaladdress3 = response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[3]').extract_first()
                     finaladdress = finaladdress1 + " " + finaladdress2 + " " + finaladdress3
 
+                    if response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[4]').extract_first():
+                        finaladdress4 = response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[4]').extract_first()
+                        finaladdress = finaladdress1 + " " + finaladdress2 + " " + finaladdress3 + " " + finaladdress4
 
-        if finaladdress:
-            finaladdress = re.sub('\s+',' ',finaladdress)
+
+            if finaladdress:
+                finaladdress = re.sub('\s+',' ',finaladdress)
 
 
         self.count = self.count + 1
@@ -168,7 +172,7 @@ class StackOverflowSpider(scrapy.Spider):
         environmentTemplateJSON['companycustomersinputPrompt'] = "Your customers are ..."
         environmentTemplateJSON['companycustomers'] = "Your target industry customers are: " + companytype + ", " + industry
         environmentTemplateJSON['companydistinguishinputPrompt'] = "Something unique to this company..."
-        environmentTemplateJSON['companydistinguish'] = companysize
+        environmentTemplateJSON['companydistinguish'] = "Stackoverflow has tagged your company as: " + companysize
 
         # ### emailletterTemplateJSON ################################# #
         emailletterTemplateJSON['lead'] = "Scrape Stackoverflow Jobs"
@@ -193,7 +197,7 @@ class StackOverflowSpider(scrapy.Spider):
                 "lead": emailletterTemplateJSON['lead'],
                 "research": emailletterTemplateJSON['research'],
                 "header": "A placeholder for a email header imported from a JSON file.",
-                "body": "<p id='coverletterTime' class='w3-left-align'>{{today | date}}</p> <br> Dear <span class=\"highlighterDiv\">{{audience.attn}}</span>, <br><br> <p class='tab'>My name is <span class=\"highlighterDiv\">{{user.firstName}}</span> <span class=\"highlighterDiv\">{{user.lastName}}</span>. I learned about <span class=\"highlighterDiv\">{{audience.name}}</span> though <span class=\"highlighterDiv\">{{leads.leadtype}}</span>. I see you are in the process of hiring for a <span class=\"highlighterDiv\">{{audience.jobname}}</span>. Based on what I learned from <span class=\"highlighterDiv\">{{leads.followup}}</span> you want applicants who have the following skills: <span class=\"highlighterDiv\">{{desirability.skillarray}}}</span>. Stackoverflow has tagged your company as: <span class=\"highlighterDiv\">{{environmentsetting.companydistinguish}}</span>. <span class=\"highlighterDiv\">{{environmentsetting.companydescription}}</span>. <span class=\"highlighterDiv\">{{environmentsetting.companyphilosophy}}</span>. This position and your company is appealing to me. I would like to talk with you further regarding my eligibility for the <span class=\"highlighterDiv\">{{audience.jobname}}</span>, <span class=\"highlighterDiv\">{{audience.jobid}}</span> position. </p><br><p> Respectfully,</p> <span class = \"highlighterDiv\">{{user.firstName}}</span> <span class = \"highlighterDiv\"> {{user.middleName}} </span> <span class = \"highlighterDiv\">{{user.lastName}}</span> <br> <span class=\"highlighterDiv\">{{user.myUrl}}</span> <p></p>",
+                "body": "<p id='coverletterTime' class='w3-left-align'>{{today | date}}</p> <br> Dear <span class=\"highlighterDiv\">{{audience.attn}}</span>, <br><br> <p class='tab'>My name is <span class=\"highlighterDiv\">{{user.firstName}}</span> <span class=\"highlighterDiv\">{{user.lastName}}</span>. I learned about <span class=\"highlighterDiv\">{{audience.name}}</span> though <span class=\"highlighterDiv\">{{leads.leadtype}}</span>. I see you are in the process of hiring for a <span class=\"highlighterDiv\">{{audience.jobname}}</span>. Based on what I learned from <span class=\"highlighterDiv\">{{leads.followup}}</span> you want applicants who have the following skills: <span class=\"highlighterDiv\">{{desirability.skillarray}}}</span>. <span class=\"highlighterDiv\">{{environmentsetting.companydistinguish}}</span>. <span class=\"highlighterDiv\">{{environmentsetting.companycustomers}}</span>. <span class=\"highlighterDiv\">{{environmentsetting.companyphilosophy}}</span>. This position and your company is appealing to me. I would like to talk with you further regarding my eligibility for the <span class=\"highlighterDiv\">{{audience.jobname}}</span>, <span class=\"highlighterDiv\">{{audience.jobid}}</span> position. </p><br><p> Respectfully,</p> <span class = \"highlighterDiv\">{{user.firstName}}</span> <span class = \"highlighterDiv\"> {{user.middleName}} </span> <span class = \"highlighterDiv\">{{user.lastName}}</span> <br> <span class=\"highlighterDiv\">{{user.myUrl}}</span> <p></p>",
                 "footer": "A placeholder for a email footer imported from a JSON file."
             },
             "resumeTemplateJSON": {
