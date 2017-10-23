@@ -75,6 +75,12 @@ def cryptography_has_rsa_oaep_md():
     ]
 
 
+def cryptography_has_rsa_oaep_label():
+    return [
+        "EVP_PKEY_CTX_set0_rsa_oaep_label",
+    ]
+
+
 def cryptography_has_ssl3_method():
     return [
         "SSLv3_method",
@@ -237,6 +243,13 @@ def cryptography_has_evp_pkey_get_set_tls_encodedpoint():
     ]
 
 
+def cryptography_has_fips():
+    return [
+        "FIPS_set_mode",
+        "FIPS_mode",
+    ]
+
+
 # This is a mapping of
 # {condition: function-returning-names-dependent-on-that-condition} so we can
 # loop over them and delete unsupported names at runtime. It will be removed
@@ -251,6 +264,7 @@ CONDITIONAL_NAMES = {
         cryptography_has_rsa_r_pkcs_decoding_error
     ),
     "Cryptography_HAS_RSA_OAEP_MD": cryptography_has_rsa_oaep_md,
+    "Cryptography_HAS_RSA_OAEP_LABEL": cryptography_has_rsa_oaep_label,
     "Cryptography_HAS_SSL3_METHOD": cryptography_has_ssl3_method,
     "Cryptography_HAS_ALPN": cryptography_has_alpn,
     "Cryptography_HAS_COMPRESSION": cryptography_has_compression,
@@ -285,4 +299,5 @@ CONDITIONAL_NAMES = {
     "Cryptography_HAS_EVP_PKEY_get_set_tls_encodedpoint": (
         cryptography_has_evp_pkey_get_set_tls_encodedpoint
     ),
+    "Cryptography_HAS_FIPS": cryptography_has_fips,
 }

@@ -23,6 +23,7 @@ from cryptography.hazmat.backends.interfaces import (
 from cryptography.hazmat.backends.openssl import aead
 from cryptography.hazmat.backends.openssl.ciphers import _CipherContext
 from cryptography.hazmat.backends.openssl.cmac import _CMACContext
+from cryptography.hazmat.backends.openssl.decode_asn1 import _Integers
 from cryptography.hazmat.backends.openssl.dh import (
     _DHParameters, _DHPrivateKey, _DHPublicKey,
     _dh_params_dup
@@ -57,10 +58,10 @@ from cryptography.hazmat.primitives.asymmetric.padding import (
     MGF1, OAEP, PKCS1v15, PSS
 )
 from cryptography.hazmat.primitives.ciphers.algorithms import (
-    AES, ARC4, Blowfish, CAST5, Camellia, IDEA, SEED, TripleDES
+    AES, ARC4, Blowfish, CAST5, Camellia, ChaCha20, IDEA, SEED, TripleDES
 )
 from cryptography.hazmat.primitives.ciphers.modes import (
-    CBC, CFB, CFB8, CTR, ECB, GCM, OFB
+    CBC, CFB, CFB8, CTR, ECB, GCM, OFB, XTS
 )
 from cryptography.hazmat.primitives.kdf import scrypt
 
@@ -93,12 +94,6 @@ class Backend(object):
         self._binding = binding.Binding()
         self._ffi = self._binding.ffi
         self._lib = self._binding.lib
-
-        # Set the default string mask for encoding ASN1 strings to UTF8. This
-        # is the default for newer OpenSSLs for several years (1.0.1h+) and is
-        # recommended in RFC 2459.
-        res = self._lib.ASN1_STRING_set_default_mask_asc(b"utf8only")
-        self.openssl_assert(res == 1)
 
         self._cipher_registry = {}
         self._register_default_ciphers()
@@ -263,6 +258,12 @@ class Backend(object):
             type(None),
             GetCipherByName("rc4")
         )
+        self.register_cipher_adapter(
+            ChaCha20,
+            type(None),
+            GetCipherByName("chacha20")
+        )
+        self.register_cipher_adapter(AES, XTS, _get_xts_cipher)
 
     def create_symmetric_encryption_ctx(self, cipher, mode):
         return _CipherContext(self, cipher, mode, _CipherContext._ENCRYPT)
@@ -547,7 +548,11 @@ class Backend(object):
         elif isinstance(padding, OAEP) and isinstance(padding._mgf, MGF1):
             return (
                 self._oaep_hash_supported(padding._mgf._algorithm) and
-                self._oaep_hash_supported(padding._algorithm)
+                self._oaep_hash_supported(padding._algorithm) and
+                (
+                    (padding._label is None or len(padding._label) == 0) or
+                    self._lib.Cryptography_HAS_RSA_OAEP_LABEL == 1
+                )
             )
         else:
             return False
@@ -939,18 +944,22 @@ class Backend(object):
             res = add_func(x509_obj, x509_extension, i)
             self.openssl_assert(res >= 1)
 
+    def _create_raw_x509_extension(self, extension, value):
+        obj = _txt2obj_gc(self, extension.oid.dotted_string)
+        return self._lib.X509_EXTENSION_create_by_OBJ(
+            self._ffi.NULL, obj, 1 if extension.critical else 0, value
+        )
+
     def _create_x509_extension(self, handlers, extension):
         if isinstance(extension.value, x509.UnrecognizedExtension):
-            obj = _txt2obj_gc(self, extension.oid.dotted_string)
             value = _encode_asn1_str_gc(
                 self, extension.value.value, len(extension.value.value)
             )
-            return self._lib.X509_EXTENSION_create_by_OBJ(
-                self._ffi.NULL,
-                obj,
-                1 if extension.critical else 0,
-                value
-            )
+            return self._create_raw_x509_extension(extension, value)
+        elif isinstance(extension.value, x509.TLSFeature):
+            asn1 = _Integers([x.value for x in extension.value]).dump()
+            value = _encode_asn1_str_gc(self, asn1, len(asn1))
+            return self._create_raw_x509_extension(extension, value)
         else:
             try:
                 encode = handlers[extension.oid]
@@ -1951,6 +1960,11 @@ class GetCipherByName(object):
     def __call__(self, backend, cipher, mode):
         cipher_name = self._fmt.format(cipher=cipher, mode=mode).lower()
         return backend._lib.EVP_get_cipherbyname(cipher_name.encode("ascii"))
+
+
+def _get_xts_cipher(backend, cipher, mode):
+    cipher_name = "aes-{0}-xts".format(cipher.key_size // 2)
+    return backend._lib.EVP_get_cipherbyname(cipher_name.encode("ascii"))
 
 
 backend = Backend()

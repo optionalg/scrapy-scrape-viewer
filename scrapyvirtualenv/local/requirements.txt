@@ -1,0 +1,1 @@
+/home/mezcel/github/scrapy-scrape-viewer/scrapyvirtualenv/requirements.txt
