@@ -124,9 +124,6 @@ class StackOverflowSpider(scrapy.Spider):
             if finaladdress:
                 finaladdress = re.sub('\s+',' ',finaladdress)
 
-
-        self.count = self.count + 1
-
         # ### items #################################### #
         items['id'] = self.count
         items['job'] = companyname
@@ -178,7 +175,7 @@ class StackOverflowSpider(scrapy.Spider):
         emailletterTemplateJSON['lead'] = "Scrape Stackoverflow Jobs"
         emailletterTemplateJSON['research'] = parse_jobpost_emailletterTemplateJSON['research']
 
-
+        self.count = self.count + 1
 
         yield {
             'id': items['id'],
