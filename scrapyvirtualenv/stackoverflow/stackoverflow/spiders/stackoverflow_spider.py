@@ -33,6 +33,7 @@ class StackOverflowSpider(scrapy.Spider):
             employer = jobdetaildescription.css('div.-company.g-row > div.-name > a::text').extract_first()
             employerLink = "https://stackoverflow.com" + response.css('a.employer::attr(href)').extract_first()
             location = jobdetaildescription.css('div.-company.g-row > div.-location::text').extract_first()
+            location = re.sub('\s+',' ',location)
 
         for aboutthisjob in response.css('.-about-job'):
             jobtype = aboutthisjob.css('.-about-job-items > div:nth-child(1) > div:nth-child(1) > span:nth-child(2)::text').extract_first()
@@ -40,6 +41,8 @@ class StackOverflowSpider(scrapy.Spider):
 
         for jobdescription in response.css('.-job-description'):
             description = jobdescription.css('.-job-description > div.description').extract_first()
+            description = re.sub('\s+',' ',description)
+
 
         mailtolink = response.css('#action-bar > div.g-row.-share-report > div:nth-child(1) > a::attr(href)').extract_first()
 
@@ -88,6 +91,9 @@ class StackOverflowSpider(scrapy.Spider):
         companyphil = response.css('.first-company-statement').extract()
         if not companyphil:
             companyphil = "no extra data on Stackoverflow"
+        else:
+            companyphil = re.sub('\s+',' ',companyphil)
+
         companyhomepage = response.css('#company-profile > div:nth-child(2) > div.right > div:nth-child(1) > a:nth-child(1)::attr(href)').extract_first()
 
         for techenvironment in response.css('div.tags'):
@@ -99,6 +105,7 @@ class StackOverflowSpider(scrapy.Spider):
 
         if not response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[1]').extract_first():
             finaladdress = parse_jobpost_receiverTemplateJSON['state']
+            finaladdress = re.sub('\s+',' ',finaladdress)
 
 
         if response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[1]').extract_first():
@@ -107,22 +114,26 @@ class StackOverflowSpider(scrapy.Spider):
 
             if (finaladdress1 == "USA"):
                 finaladdress = parse_jobpost_receiverTemplateJSON['state']
+                finaladdress = re.sub('\s+',' ',finaladdress)
 
             if response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[2]').extract_first():
                 finaladdress2 = response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[2]').extract_first()
                 finaladdress = finaladdress1 + " " + finaladdress2
+                finaladdress = re.sub('\s+',' ',finaladdress)
 
                 if response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[3]').extract_first():
                     finaladdress3 = response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[3]').extract_first()
                     finaladdress = finaladdress1 + " " + finaladdress2 + " " + finaladdress3
+                    finaladdress = re.sub('\s+',' ',finaladdress)
 
                     if response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[4]').extract_first():
                         finaladdress4 = response.xpath('//*[@id="company-profile"]/div[9]/div[1]/div[1]/text()[4]').extract_first()
                         finaladdress = finaladdress1 + " " + finaladdress2 + " " + finaladdress3 + " " + finaladdress4
+                        finaladdress = re.sub('\s+',' ',finaladdress)
 
 
-            if finaladdress:
-                finaladdress = re.sub('\s+',' ',finaladdress)
+            # if finaladdress:
+                # finaladdress = re.sub('\s+',' ',finaladdress)
 
         # ### items #################################### #
         items['id'] = self.count
@@ -194,7 +205,7 @@ class StackOverflowSpider(scrapy.Spider):
                 "lead": emailletterTemplateJSON['lead'],
                 "research": emailletterTemplateJSON['research'],
                 "header": "A placeholder for a email header imported from a JSON file.",
-                "body": "<p id='coverletterTime' class='w3-left-align'>{{today | date}}</p> <br> Dear <span class=\"highlighterDiv\">{{audience.attn}}</span>, <br><br> <p class='tab'>My name is <span class=\"highlighterDiv\">{{user.firstName}}</span> <span class=\"highlighterDiv\">{{user.lastName}}</span>. I learned about <span class=\"highlighterDiv\">{{audience.name}}</span> though <span class=\"highlighterDiv\">{{leads.leadtype}}</span>. I see you are in the process of hiring for a <span class=\"highlighterDiv\">{{audience.jobname}}</span>. Based on what I learned from <span class=\"highlighterDiv\">{{leads.followup}}</span> you want applicants who have the following skills: <span class=\"highlighterDiv\">{{desirability.skillarray}}}</span>. <span class=\"highlighterDiv\">{{environmentsetting.companydistinguish}}</span>. <span class=\"highlighterDiv\">{{environmentsetting.companycustomers}}</span>. <span class=\"highlighterDiv\">{{environmentsetting.companyphilosophy}}</span>. This position and your company is appealing to me. I would like to talk with you further regarding my eligibility for the <span class=\"highlighterDiv\">{{audience.jobname}}</span>, <span class=\"highlighterDiv\">{{audience.jobid}}</span> position. </p><br><p> Respectfully,</p> <span class = \"highlighterDiv\">{{user.firstName}}</span> <span class = \"highlighterDiv\"> {{user.middleName}} </span> <span class = \"highlighterDiv\">{{user.lastName}}</span> <br> <span class=\"highlighterDiv\">{{user.myUrl}}</span> <p></p>",
+                "body": "<p id='coverletterTime' class='w3-left-align'>{{today | date}}</p> <br> Dear <span class=\"highlighterDiv\">{{audience.attn}}</span>, <br><br> <p class='tab'>My name is <span class=\"highlighterDiv\">{{user.firstName}}</span> <span class=\"highlighterDiv\">{{user.lastName}}</span>. I learned about <span class=\"highlighterDiv\">{{audience.name}}</span> though <span class=\"highlighterDiv\">{{leads.leadtype}}</span>. I see you are in the process of hiring for a <span class=\"highlighterDiv\">{{audience.jobname}}</span>. Based on what I learned from <span class=\"highlighterDiv\">{{leads.followup}}</span> you want applicants who have the following. <span class=\"highlighterDiv\">{{desirability.skillarray}}}</span>. <span class=\"highlighterDiv\">{{environmentsetting.companycustomers}}</span>. <span class=\"highlighterDiv\">{{environmentsetting.companydistinguish}}</span>. I have an understanding in the technology being used in respect to the customer your company services serviced. <span class=\"highlighterDiv\">{{environmentsetting.companyphilosophy}}</span>. This position and your company is appealing to me. I would like to talk with you further regarding my eligibility for the <span class=\"highlighterDiv\">{{audience.jobname}}</span>, <span class=\"highlighterDiv\">{{audience.jobid}}</span> position. </p><br><p> Respectfully,</p> <span class = \"highlighterDiv\">{{user.firstName}}</span> <span class = \"highlighterDiv\"> {{user.middleName}} </span> <span class = \"highlighterDiv\">{{user.lastName}}</span> <br> <span class=\"highlighterDiv\">{{user.myUrl}}</span> <p></p>",
                 "footer": "A placeholder for a email footer imported from a JSON file."
             },
             "resumeTemplateJSON": {
@@ -204,7 +215,7 @@ class StackOverflowSpider(scrapy.Spider):
             },
             "coverletterTemplateJSON": {
                 "header": "<p class='w3-left-align'>{{today | date}}</p><p><span class=\"highlighterDiv\">{{audience.attn}}</span><br><span class=\"highlighterDiv\">{{audience.name}}</span><br><span class=\"highlighterDiv\">{{audience.address}}</span><br><span class=\"highlighterDiv\">{{audience.city}}</span>, <span class=\"highlighterDiv\">{{audience.state}}</span>, <span class=\"highlighterDiv\">{{audience.zip}}</span></p><br>",
-                "body": "<p>Dear <span class=\"highlighterDiv\">{{audience.attn}}</span>,</p> <p class='tab'>My name is <span class=\"highlighterDiv\">{{user.firstName}}</span> <span class=\"highlighterDiv\">{{user.middleName}}</span> <span class=\"highlighterDiv\">{{user.lastName}}</span>. I am applying for the <span class=\"highlighterDiv\">{{audience.jobname}}</span> position, <span class=\"highlighterDiv\">{{audience.jobid}}</span>, for <span class=\"highlighterDiv\">{{audience.name}}</span> in <span class=\"highlighterDiv\">{{audience.city}}</span>, <span class=\"highlighterDiv\">{{audience.state}}</span>. I am seeking to diversify my experience portfolio and build professional relationships as a <span class=\"highlighterDiv\">{{desirability.applicationidentity}}</span>. </p><p class='tab'><span class=\"highlighterDiv\">{{audience.attn}}</span>, thank you for taking the time to consider my application. I hope to be of service to <span class=\"highlighterDiv\">{{audience.name}}</span>.</p>",
-                "footer": "<br><p>Sincerely,</p><br><br> <p><span class=\"highlighterDiv\">{{user.firstName}}</span> <span class=\"highlighterDiv\">{{user.middleName}}</span> <span class=\"highlighterDiv\">{{user.lastName}}</span><br><span class=\"highlighterDiv\">{{user.address}}</span>, <span class=\"highlighterDiv\">{{user.city}}</span>, <span class=\"highlighterDiv\">{{user.state}}</span>, <span class=\"highlighterDiv\">{{user.zip}}</span><br><span class=\"highlighterDiv\">{{user.email}}</span></p>"
+                "body": "<p>Dear <span class=\"highlighterDiv\">{{audience.attn}}</span>,</p> <p class=\"tab\">My name is <span class=\"highlighterDiv\">{{user.firstName}}</span> <span class=\"highlighterDiv\">{{user.middleName}}</span> <span class=\"highlighterDiv\">{{user.lastName}}</span>. I am applying for the <span class=\"highlighterDiv\">{{audience.jobname}}</span> position at <span class=\"highlighterDiv\">{{audience.name}}</span>, in <span class=\"highlighterDiv\">{{audience.city}}</span>. I possess skills in <span class=\"highlighterDiv\">{{desirability.skillarray}}</span>. As a <span class=\"highlighterDiv\">{{desirability.applicationidentity}}</span>, my abilities include <span class=\"highlighterDiv\">{{desirability.abilityarray}}</span>, and I <span class = \"highlighterDiv\">{{desirability.knowledgearray}}</span>. </p> <p class=\"tab\">I am seeking to diversify my technology portfolio and develop a career as a <span class = \"highlighterDiv\">{{desirability.applicationidentity}}</span>. I have developed a variety of program applications which perform tasks directed at social networking, GPS, weather, document preparation, databases, audio processing, telecommunications networking, and agriculture. I have labor, retail, mechanic, and legal employment experience and graduate school leadership in databases and robotics. I posses  the adaptability to apply the skills needed to work as a <span class=\"highlighterDiv\">{{audience.jobname}}</span> within <span class=\"highlighterDiv\">{{audience.name}}</span>.</p> <p class=\"tab\">Within the last year I have developed the following technology applications: a plant identification and imaging identification application, a Windows 8-10 tablet satellite global positioning system without wi-fi app, and an interactive tablet e-Book with an independent serve library database and  A web conferencing app. These projects were an opportunity to express my understanding and ability to perform a variety of different philosophical approaches, intellectual processes, and techniques which have value in a variety of technical markets.</p> <p class=\"tab\">The Plant Identification and Imaging Identification Assistant is a Windows OS application that performs comprehensive plant identification that is based upon human observations and traits of a plant specimen. The plant identification algorithm is based on a dichotomous key that associates genetic taxonomy and leaf shape morphology. The functionality of this application is dependent on both a camera image input and a person's sense of sight and feel. I used the following skills in developing my plant identification application: C#, Sql, MySql Database, plant biology taxonomy, image detection, EmguCV, front-end/back-end software development, and user interface design.</p> <p class=\"tab\">The tablet GPS app I developed is a cross-platform mobile device which inputs GPS signals from a USB COM port and displays the users current position, altitude, and speed. This application is not dependent on Internet signals. There is an additional celestial navigation modular component feature which is  currently under construction, which will be added as a plugin. Development of my GPS application skills includes: HTML, JavaScript, serial COM Port interface, object oriented VB.Net, and GPS serial string parsing.</p> <p class=\"tab\">The interactive tablet E-Book, book library database,  web conferencing app is a social prayer/meditation application which serves as an e-book library, LAN chat room and forum, interactive touch screen tablet, and teleconferencing tool. This device is plug and play, provided that a dedicated server is actively online on a shared network. Multiple users can log in and out in a shared event experience and influence each others' experience by changing the environment content. This App uses  ASP/WCF, C#, MySql, ADO.Net, Networked Conferencing, chat room techniques, E-Book, Database, TCP/IP, front-end/back-end development, language localization, and plug and play networking.</p> <p class=\"tab\"><span class=\"highlighterDiv\">{{audience.attn}}</span>, thank you for taking the time to read and consider my cover letter for employment with <span class=\"highlighterDiv\">{{audience.name}}</span>. I have multiple technical skills an diverse work experiences that will integrate well within your organization and its business culture. I welcome the opportunity to discuss your observations and my prospects of joining your organization and making an immediate contribution to your productivity.</p> ",
+                "footer": "<p>Sincerely,</p><br><br> <p><span class=\"highlighterDiv\">{{user.firstName}}</span> <span class=\"highlighterDiv\">{{user.middleName}}</span> <span class=\"highlighterDiv\">{{user.lastName}}</span><br><span class=\"highlighterDiv\">{{user.address}}</span>, <span class=\"highlighterDiv\">{{user.city}}</span>, <span class=\"highlighterDiv\">{{user.state}}</span>, <span class=\"highlighterDiv\">{{user.zip}}</span><br><span class=\"highlighterDiv\">{{user.email}}</span></p>"
             }
         }
